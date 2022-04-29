@@ -1,0 +1,28 @@
+{
+  "children": [
+    {
+      "name": "client",
+      "time": 1898,
+      "builtAt": 1651255621597,
+      "errors": [],
+      "errorsCount": 0,
+      "warnings": [],
+      "warningsCount": 0,
+      "children": []
+    },
+    {
+      "name": "server",
+      "time": 1939,
+      "builtAt": 1651255621663,
+      "errors": [],
+      "errorsCount": 0,
+      "warnings": [],
+      "warningsCount": 0,
+      "children": []
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "errorsCount": 0,
+  "warningsCount": 0
+}

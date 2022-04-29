@@ -1,0 +1,24 @@
+{
+  "name": "fusion-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "fusion dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fusion-cli": "^2.28.0",
+    "fusion-core": "^2.6.0",
+    "fusion-plugin-react-helmet-async": "^2.4.1",
+    "fusion-react": "^4.4.0",
+    "fusion-tokens": "^2.2.5",
+    "isomorphic-fetch": "^3.0.0",
+    "koa-bodyparser": "^4.3.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
+  }
+}
