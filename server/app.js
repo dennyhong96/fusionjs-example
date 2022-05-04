@@ -7,6 +7,23 @@ const { buildSchema } = require("graphql");
 const Event = require("./models/event");
 const User = require("./models/user");
 
+// Dynamic Relations
+const loadUser = async (userId) => {
+  const { _doc: user } = await User.findById(userId).select("-password");
+  return {
+    ...user,
+    createdEvents: loadEvents.bind(null, user.createdEvents),
+  };
+};
+
+const loadEvents = async (eventIds) => {
+  const events = await Event.find({ _id: { $in: eventIds } });
+  return events.map(({ _doc: event }) => ({
+    ...event,
+    createdBy: loadUser.bind(null, event.createdBy),
+  }));
+};
+
 const app = express();
 app.use(express.json());
 app.use(
@@ -19,12 +36,14 @@ app.use(
         description: String!
         price: Float!
         date: String!
+        createdBy: User
       }
 
       type User {
         _id: ID!
         email: String!
         password: String
+        createdEvents: [Event!]!
       }
 
       input EventInput {
@@ -41,7 +60,7 @@ app.use(
 
       type RootQuery {
         events: [Event!]!
-
+        users: [User!]!
       }
 
       type RootMutation {
@@ -60,7 +79,21 @@ app.use(
       // Queries
       async events() {
         const events = await Event.find();
-        return events;
+        return events.map(({ _doc: event }) => ({
+          ...event,
+
+          // when a response object's field value is a Function
+          // GraphQL invokes it when that field is selected by the client
+          createdBy: loadUser.bind(null, event.createdBy),
+        }));
+      },
+
+      async users() {
+        const users = await User.find().select("-password");
+        return users.map(({ _doc: user }) => ({
+          ...user,
+          createdEvents: loadEvents.bind(null, user.createdEvents),
+        }));
       },
 
       // Mutations
@@ -69,7 +102,7 @@ app.use(
         if (!(await User.findById(userId))) {
           throw new Error(`User doesn't exist`);
         }
-        const newEvent = await Event.create({
+        const { _doc: newEvent } = await Event.create({
           ...eventInput,
           date: new Date(eventInput.date),
           createdBy: userId,
@@ -77,11 +110,13 @@ app.use(
         await User.findByIdAndUpdate(userId, {
           $push: { createdEvents: newEvent },
         });
-        return newEvent;
+        return {
+          ...newEvent,
+          createdBy: loadUser.bind(null, newEvent.createdBy),
+        };
       },
 
       async createUser({ userInput }) {
-        // console.log(this);
         const { email, password } = userInput;
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -89,12 +124,15 @@ app.use(
         }
         const passwordSalt = await bcrypt.genSalt(12);
         const hashedPassword = await bcrypt.hash(password, passwordSalt);
-        const newUser = await User.create({
+        const { _doc: newUser } = await User.create({
           ...userInput,
           password: hashedPassword,
         });
-        newUser.password = null; // hide password from response
-        return newUser;
+        delete newUser.password; // hide password from response
+        return {
+          ...newUser,
+          createdEvents: loadEvents.bind(null, newUser.createdEvents),
+        };
       },
     },
 
