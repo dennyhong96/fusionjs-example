@@ -17,6 +17,10 @@ const eventSchema = new Schema({
     type: Date,
     required: true,
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: "User", // set up a relation, model name is referenced here
+  },
 });
 
 module.exports = model("Event", eventSchema);
