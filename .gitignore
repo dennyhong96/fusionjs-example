@@ -130,4 +130,9 @@ dist
 .pnp.*
 
 .DS_Store
-.fusion
+
+# client built files
+client/.fusion
+
+# server development env vars
+server/nodemon.json
