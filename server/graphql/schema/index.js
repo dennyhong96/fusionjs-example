@@ -1,42 +1,10 @@
 const { buildSchema } = require("graphql");
 
-module.exports = buildSchema(`
-type Event {
-  _id: ID!
-  title: String!
-  description: String!
-  price: Float!
-  date: String!
-  createdBy: User
-}
+const userSchema = require("./user");
+const eventSchema = require("./event");
+const bookingSchema = require("./booking");
 
-type User {
-  _id: ID!
-  email: String!
-  password: String
-  createdEvents: [Event!]!
-}
-
-type Booking {
-  _id: ID!
-  user: User!
-  event: Event!
-  createdAt: String!
-  updatedAt: String!
-}
-
-input EventInput {
-  title: String!
-  description: String!
-  price: Float!
-  date: String!
-}
-
-input UserInput {
-  email: String!
-  password: String!
-}
-
+const rootSchema = `
 type RootQuery {
   events: [Event!]!
   users: [User!]!
@@ -54,4 +22,11 @@ schema {
   query: RootQuery
   mutation: RootMutation
 }
+`;
+
+module.exports = buildSchema(`
+${userSchema}
+${eventSchema}
+${bookingSchema}
+${rootSchema}
 `);
