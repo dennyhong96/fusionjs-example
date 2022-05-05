@@ -2,8 +2,9 @@ const bcrypt = require("bcryptjs");
 
 const Event = require("../../models/event");
 const User = require("../../models/user");
+const Booking = require("../../models/booking");
 
-// Dynamic Relations
+// Dynamic Relationship loaders
 const loadUser = async (userId) => {
   const { _doc: user } = await User.findById(userId).select("-password");
   return {
@@ -19,6 +20,15 @@ const loadEvents = async (eventIds) => {
     date: new Date(event.date).toISOString(),
     createdBy: loadUser.bind(null, event.createdBy),
   }));
+};
+
+const loadEvent = async (eventId) => {
+  const { _doc: event } = await Event.findById(eventId);
+  return {
+    ...event,
+    date: new Date(event.date).toISOString(),
+    createdBy: loadUser.bind(null, event.createdBy),
+  };
 };
 
 // Resolvers
@@ -41,6 +51,17 @@ module.exports = {
     return users.map(({ _doc: user }) => ({
       ...user,
       createdEvents: loadEvents.bind(null, user.createdEvents),
+    }));
+  },
+
+  async bookings() {
+    const bookings = await Booking.find();
+    return bookings.map(({ _doc: booking }) => ({
+      ...booking,
+      event: loadEvent.bind(null, booking.event),
+      user: loadUser.bind(null, booking.user),
+      createdAt: new Date(booking.createdAt).toISOString(),
+      updatedAt: new Date(booking.updatedAt).toISOString(),
     }));
   },
 
@@ -81,6 +102,42 @@ module.exports = {
     return {
       ...newUser,
       createdEvents: loadEvents.bind(null, newUser.createdEvents),
+    };
+  },
+
+  async createBooking({ eventId }) {
+    const userId = "6272be39e77a5e630f848334"; // TODO: retrieve from header
+    if (!(await User.findById(userId))) {
+      throw new Error(`User doesn't exist`);
+    }
+    const event = await Event.findById(eventId);
+    if (!event) {
+      throw new Error(`Event doesn't exist`);
+    }
+    const { _doc: booking } = await Booking.create({
+      user: userId,
+      event,
+    });
+    return {
+      ...booking,
+      event: loadEvent.bind(null, booking.event),
+      user: loadUser.bind(null, booking.user),
+      createdAt: new Date(booking.createdAt).toISOString(),
+      updatedAt: new Date(booking.updatedAt).toISOString(),
+    };
+  },
+
+  async removeBooking({ bookingId }) {
+    const booking = await Booking.findById(bookingId).populate("event");
+    if (!booking) {
+      throw new Error("Booking doesn't exist");
+    }
+    await Booking.deleteOne({ id: bookingId });
+    const event = booking.event._doc;
+    return {
+      ...event,
+      date: new Date(event.date).toISOString(),
+      createdBy: loadUser.bind(null, event.createdBy),
     };
   },
 };
