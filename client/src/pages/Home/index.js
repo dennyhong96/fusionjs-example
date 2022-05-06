@@ -1,5 +1,8 @@
 import { useQuery } from "react-apollo";
 import gql from "graphql-tag";
+import { Fragment } from "react";
+
+import Modal from "../../components/Modal";
 
 const GET_EVENTS = gql`
   query GetEvents {
@@ -26,5 +29,10 @@ const GET_EVENTS = gql`
 
 export default function HomePage({}) {
   const { data: events } = useQuery(GET_EVENTS);
-  return <pre>{JSON.stringify(events, null, 2)}</pre>;
+  return (
+    <Fragment>
+      <Modal trigger={<button>Modal</button>}>This is a test</Modal>
+      <pre>{JSON.stringify(events, null, 2)}</pre>
+    </Fragment>
+  );
 }
