@@ -1,7 +1,8 @@
 import { useMutation } from "react-apollo";
 import gql from "graphql-tag";
-import { useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+
 import { loginUserAction } from "../../store/actions";
 
 const CREATE_USER = gql`
@@ -36,6 +37,7 @@ const LOGIN = gql`
 `;
 
 export default function AuthPage({}) {
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [createUser] = useMutation(CREATE_USER);
   const [login] = useMutation(LOGIN);
   const dispatch = useDispatch();
@@ -48,15 +50,17 @@ export default function AuthPage({}) {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     if (!email || !password) return;
-    await createUser({ variables: { email, password } });
+    if (isRegisterMode) {
+      await createUser({ variables: { email, password } });
+    }
     const {
       data: { login: credential },
     } = await login({
       variables: { email: email, password: password },
     });
-    dispatch(loginUserAction(credential));
     emailRef.current.value = "";
     passwordRef.current.value = "";
+    dispatch(loginUserAction(credential));
   };
 
   return (
@@ -69,7 +73,28 @@ export default function AuthPage({}) {
         <span>Password:</span>
         <input ref={passwordRef} type="password" />
       </label>
-      <button type="submit">Sign In</button>
+      <button type="submit">{!isRegisterMode ? "Sign In" : "Register"}</button>
+      {isRegisterMode ? (
+        <small>
+          Already have an account?{" "}
+          <button
+            type="button"
+            onClick={() => setIsRegisterMode((prev) => !prev)}
+          >
+            Sign in
+          </button>
+        </small>
+      ) : (
+        <small>
+          Don't have an account?{" "}
+          <button
+            type="button"
+            onClick={() => setIsRegisterMode((prev) => !prev)}
+          >
+            Register
+          </button>
+        </small>
+      )}
     </form>
   );
 }

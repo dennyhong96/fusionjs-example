@@ -14,7 +14,9 @@ import {
   ApolloClientToken,
   GraphQLEndpointToken,
   ApolloClientCredentialsToken,
+  GetApolloClientLinksToken,
 } from "fusion-plugin-apollo";
+import { setContext } from "apollo-link-context";
 import isomorphicFetch from "isomorphic-fetch";
 import Redux, {
   ReduxToken,
@@ -27,6 +29,20 @@ import ReduxActionEmitterEnhancer from "fusion-plugin-redux-action-emitter-enhan
 import Root from "./components/Root";
 import TodosPlugin from "./plugins/todos";
 import rootReducer from "./store/reducers";
+
+// Authorization
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem("AUTH_TOKEN");
+  console.log("run", { token });
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
 
 export default async function start() {
   const app = new App(<Root />);
@@ -43,6 +59,7 @@ export default async function start() {
   // Apollo
   app.enhance(RenderToken, ApolloRenderEnhancer);
   app.register(ApolloClientCredentialsToken, "include");
+  app.register(GetApolloClientLinksToken, (links) => [authLink, ...links]);
   app.register(ApolloClientToken, ApolloClientPlugin);
   app.register(GraphQLEndpointToken, "http://localhost:8000/graphql");
 
@@ -50,7 +67,11 @@ export default async function start() {
   app.register(ReduxToken, Redux);
   app.register(ReducerToken, rootReducer);
   app.register(EnhancerToken, ReduxActionEmitterEnhancer);
-  __NODE__ && app.register(GetInitialStateToken, async (ctx) => ({}));
+  __NODE__ &&
+    app.register(GetInitialStateToken, async (ctx) => {
+      console.log({ ctx });
+      return {};
+    });
 
   if (__NODE__) {
     app.middleware(require("koa-bodyparser")());

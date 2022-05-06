@@ -5,6 +5,7 @@ const initialState = {
   token: null,
   tokenExp: null,
   isLoggedIn: false,
+  isAuthChecked: false,
 };
 
 export default function (state = initialState, action) {
@@ -19,10 +20,14 @@ export default function (state = initialState, action) {
         token,
         tokenExp,
         isLoggedIn: true,
+        isAuthChecked: true,
       };
     }
     case LOGOUT_USER: {
-      return initialState;
+      return {
+        ...initialState,
+        isAuthChecked: true,
+      };
     }
     default: {
       return state;

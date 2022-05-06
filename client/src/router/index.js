@@ -1,7 +1,10 @@
-import { Navigate, Route, Routes } from "fusion-plugin-react-router";
+import { Route, Routes } from "fusion-plugin-react-router";
+import { Fragment } from "react";
 
-import AuthLayout from "../layout/default.layout";
-import { authRouters } from "./router.config";
+import PublicRoute from "./public-route";
+import { routes } from "./router.config";
+import ProtectedRoute from "./protected-route";
+import DefaultLayout from "../layout/DefaultLayout";
 
 const PageNotFound = () => (
   <div>
@@ -12,23 +15,30 @@ const PageNotFound = () => (
 export function Router({}) {
   return (
     <Routes>
-      <Route path="/auth" element={<AuthLayout />}>
-        {authRouters
-          .filter((r) => !r.isLayout)
-          .map((r, i) => (
-            <Route
-              key={i}
-              path={r.path}
-              exact={r.exact}
-              caseSensitive={true}
-              element={<r.component />}
-            />
-          ))}
+      {routes.map((r, i) => (
         <Route
-          path="*"
-          element={<Navigate to="/auth/authenticate" replace />}
+          key={i}
+          path={r.path}
+          exact={r.exact}
+          caseSensitive={true}
+          element={(() => {
+            const Guard = r.isProtected
+              ? ProtectedRoute
+              : r.isPublic
+              ? PublicRoute
+              : Fragment;
+            const Component = r.component;
+            const Layout = Component.Layout ?? DefaultLayout;
+            return (
+              <Guard>
+                <Layout>
+                  <Component />
+                </Layout>
+              </Guard>
+            );
+          })()}
         />
-      </Route>
+      ))}
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
