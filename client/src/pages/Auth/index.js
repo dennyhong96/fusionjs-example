@@ -1,6 +1,8 @@
-import { useQuery, useMutation, useLazyQuery } from "react-apollo";
+import { useMutation } from "react-apollo";
 import gql from "graphql-tag";
 import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUserAction } from "../../store/actions";
 
 const CREATE_USER = gql`
   mutation CreateUser($email: String!, $password: String!) {
@@ -24,11 +26,11 @@ const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       user {
+        _id
         email
       }
       token
       tokenExp
-      __typename
     }
   }
 `;
@@ -36,6 +38,7 @@ const LOGIN = gql`
 export default function AuthPage({}) {
   const [createUser] = useMutation(CREATE_USER);
   const [login] = useMutation(LOGIN);
+  const dispatch = useDispatch();
 
   const emailRef = useRef("");
   const passwordRef = useRef("");
@@ -46,10 +49,14 @@ export default function AuthPage({}) {
     const password = passwordRef.current.value;
     if (!email || !password) return;
     await createUser({ variables: { email, password } });
-    const result = await login({
+    const {
+      data: { login: credential },
+    } = await login({
       variables: { email: email, password: password },
     });
-    console.log({ result });
+    dispatch(loginUserAction(credential));
+    emailRef.current.value = "";
+    passwordRef.current.value = "";
   };
 
   return (
