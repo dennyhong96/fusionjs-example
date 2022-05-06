@@ -3,6 +3,23 @@ import jwtDecode from "jwt-decode";
 
 import { isJson } from "../../utils";
 
+export const loginUserAction = ({ user, token, tokenExp }) => {
+  localStorage.setItem("AUTH_TOKEN", token);
+  localStorage.setItem("USER", JSON.stringify(user));
+  return {
+    type: LOGIN_USER,
+    payload: { user, token, tokenExp },
+  };
+};
+
+export const logoutUserAction = () => {
+  localStorage.removeItem("AUTH_TOKEN");
+  localStorage.removeItem("USER");
+  return {
+    type: LOGOUT_USER,
+  };
+};
+
 export const loginUserFromStorage = () => {
   const token = localStorage.getItem("AUTH_TOKEN");
   const userJson = localStorage.getItem("USER");
@@ -24,21 +41,4 @@ export const loginUserFromStorage = () => {
     token,
     tokenExp: new Date(decoded.exp * 1000).toISOString(),
   });
-};
-
-export const loginUserAction = ({ user, token, tokenExp }) => {
-  localStorage.setItem("AUTH_TOKEN", token);
-  localStorage.setItem("USER", JSON.stringify(user));
-  return {
-    type: LOGIN_USER,
-    payload: { user, token, tokenExp },
-  };
-};
-
-export const logoutUserAction = () => {
-  localStorage.removeItem("AUTH_TOKEN");
-  localStorage.removeItem("USER");
-  return {
-    type: LOGOUT_USER,
-  };
 };

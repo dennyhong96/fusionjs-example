@@ -67,11 +67,7 @@ export default async function start() {
   app.register(ReduxToken, Redux);
   app.register(ReducerToken, rootReducer);
   app.register(EnhancerToken, ReduxActionEmitterEnhancer);
-  __NODE__ &&
-    app.register(GetInitialStateToken, async (ctx) => {
-      console.log({ ctx });
-      return {};
-    });
+  __NODE__ && app.register(GetInitialStateToken, async (ctx) => ({}));
 
   if (__NODE__) {
     app.middleware(require("koa-bodyparser")());

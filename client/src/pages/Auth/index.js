@@ -2,6 +2,7 @@ import { useMutation } from "react-apollo";
 import gql from "graphql-tag";
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { styled } from "fusion-plugin-styletron-react";
 
 import { loginUserAction } from "../../store/actions";
 
@@ -36,6 +37,38 @@ const LOGIN = gql`
   }
 `;
 
+const Form = styled("form", {
+  width: "100%",
+  maxWidth: "500px",
+  display: "flex",
+  flexDirection: "column",
+  padding: "2rem",
+  margin: "auto",
+  gap: "1rem",
+});
+
+const Label = styled("label", {
+  display: "flex",
+  flexDirection: "column",
+  gap: "0.5rem",
+});
+
+const Input = styled("input", {
+  height: "40px",
+  font: "inherit",
+  paddingLeft: "0.5rem",
+  paddingRight: "0.5rem",
+  borderRadius: 0,
+  border: "1px solid #000",
+});
+
+const Button = styled("button", {
+  font: "inherit",
+  border: "initial",
+  padding: "0.5rem 1rem",
+  cursor: "pointer",
+});
+
 export default function AuthPage({}) {
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [createUser] = useMutation(CREATE_USER);
@@ -64,37 +97,37 @@ export default function AuthPage({}) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
+    <Form onSubmit={handleSubmit}>
+      <Label>
         <span>Email:</span>
-        <input ref={emailRef} type="text" />
-      </label>
-      <label>
+        <Input ref={emailRef} type="text" />
+      </Label>
+      <Label>
         <span>Password:</span>
-        <input ref={passwordRef} type="password" />
-      </label>
-      <button type="submit">{!isRegisterMode ? "Sign In" : "Register"}</button>
+        <Input ref={passwordRef} type="password" />
+      </Label>
+      <Button type="submit">{!isRegisterMode ? "Sign In" : "Register"}</Button>
       {isRegisterMode ? (
         <small>
           Already have an account?{" "}
-          <button
+          <Button
             type="button"
             onClick={() => setIsRegisterMode((prev) => !prev)}
           >
             Sign in
-          </button>
+          </Button>
         </small>
       ) : (
         <small>
           Don't have an account?{" "}
-          <button
+          <Button
             type="button"
             onClick={() => setIsRegisterMode((prev) => !prev)}
           >
             Register
-          </button>
+          </Button>
         </small>
       )}
-    </form>
+    </Form>
   );
 }
