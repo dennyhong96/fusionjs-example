@@ -9,13 +9,14 @@ type RootQuery {
   events: [Event!]!
   users: [User!]!
   bookings: [Booking!]!
+  login(email: String!, password: String!): Auth!
 }
 
 type RootMutation {
-  createEvent(eventInput: EventInput): Event
-  createUser(userInput: UserInput): User
-  createBooking(eventId: ID!): Booking
-  removeBooking(bookingId: ID!): Event
+  createEvent(eventInput: EventInput): Event!
+  createUser(userInput: UserInput): User!
+  createBooking(eventId: ID!): Booking!
+  removeBooking(bookingId: ID!): Event!
 }
 
 schema {
