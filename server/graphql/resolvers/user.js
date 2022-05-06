@@ -18,19 +18,6 @@ module.exports = {
     return users.map((user) => transformUser(user));
   },
 
-  async login({ email, password }) {
-    const user = await User.findOne({ email });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      throw new Error("Invalid credentials");
-    }
-    const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 3; // 3hr out
-    return {
-      user: transformUser(user),
-      token: jwt.sign({ exp, data: user._doc }, process.env.JWT_PRIVATE_KEY),
-      tokenExp: formatDate(exp * 1000),
-    };
-  }, // login is a query since it doesn't mutate date in DB
-
   // Mutations
   async createUser({ userInput }) {
     const { email, password } = userInput;
@@ -46,4 +33,17 @@ module.exports = {
     // delete newUser.password; // hide password from response
     return transformUser(newUser);
   },
+
+  async login({ email, password }) {
+    const user = await User.findOne({ email });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      throw new Error("Invalid credentials");
+    }
+    const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 3; // 3hr out
+    return {
+      user: transformUser(user),
+      token: jwt.sign({ exp, data: user._doc }, process.env.JWT_PRIVATE_KEY),
+      tokenExp: formatDate(exp * 1000),
+    };
+  }, // login has no side effect but is considered a mutation because it's an operation that result from user actions
 };

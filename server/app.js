@@ -1,12 +1,19 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const { graphqlHTTP } = require("express-graphql");
+const cors = require("cors");
 
 const { auth } = require("./middlewares/auth");
 const schema = require("./graphql/schema");
 const rootResolver = require("./graphql/resolvers");
 
 const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(auth);
 app.use(

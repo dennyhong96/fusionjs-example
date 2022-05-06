@@ -13,14 +13,17 @@
   "dependencies": {
     "fusion-cli": "^2.28.0",
     "fusion-core": "^2.6.0",
+    "fusion-plugin-apollo": "^3.6.1",
     "fusion-plugin-react-helmet-async": "^2.4.1",
     "fusion-plugin-react-router": "^3.1.1",
     "fusion-plugin-styletron-react": "^3.4.1",
     "fusion-react": "^4.4.0",
     "fusion-tokens": "^2.2.5",
+    "graphql-tag": "^2.12.6",
     "isomorphic-fetch": "^3.0.0",
     "koa-bodyparser": "^4.3.0",
     "react": "^16.14.0",
+    "react-apollo": "^3.1.5",
     "react-dom": "^16.14.0"
   }
 }
