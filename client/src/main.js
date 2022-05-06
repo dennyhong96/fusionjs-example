@@ -1,7 +1,8 @@
 import React from "react";
 import App from "fusion-react";
 import HelmetPlugin from "fusion-plugin-react-helmet-async";
-import Router, { RouterToken } from "fusion-plugin-react-router";
+import Router from "fusion-plugin-react-router";
+import Styletron from "fusion-plugin-styletron-react";
 
 import Root from "./components/Root";
 import TodosPlugin from "./plugins/todos";
@@ -11,6 +12,7 @@ export default async function start() {
 
   app.register(HelmetPlugin);
   app.register(Router);
+  app.register(Styletron);
 
   // Only run on server
   if (__NODE__) {
