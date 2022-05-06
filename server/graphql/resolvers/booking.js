@@ -6,14 +6,19 @@ const { transformBooking, transformEvent } = require("./loaders");
 // Resolvers
 module.exports = {
   // Queries
-  async bookings() {
+  async bookings(arg, { headers: { isAuthenticated } }) {
+    if (!isAuthenticated) {
+      throw new Error(`Unauthenticated`);
+    }
     const bookings = await Booking.find();
     return bookings.map((booking) => transformBooking(booking));
   },
 
   // Mutations
-  async createBooking({ eventId }) {
-    const userId = "62735c6afa89de39e8560f45"; // TODO: retrieve from header
+  async createBooking({ eventId }, { headers: { isAuthenticated, userId } }) {
+    if (!isAuthenticated) {
+      throw new Error(`Unauthenticated`);
+    }
     if (!(await User.findById(userId))) {
       throw new Error(`User doesn't exist`);
     }
@@ -28,10 +33,16 @@ module.exports = {
     return transformBooking(booking);
   },
 
-  async removeBooking({ bookingId }) {
+  async removeBooking({ bookingId }, { headers: { isAuthenticated, userId } }) {
+    if (!isAuthenticated) {
+      throw new Error(`Unauthenticated`);
+    }
     const booking = await Booking.findById(bookingId).populate("event");
     if (!booking) {
       throw new Error("Booking doesn't exist");
+    }
+    if (booking.user.toString() !== userId) {
+      throw new Error("Insufficient permissions");
     }
     await Booking.deleteOne({ id: bookingId });
     return transformEvent(booking.event);

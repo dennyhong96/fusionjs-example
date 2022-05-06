@@ -11,8 +11,10 @@ module.exports = {
   },
 
   // Mutations
-  async createEvent({ eventInput }) {
-    const userId = "62735c6afa89de39e8560f45"; // TODO: retrieve from header
+  async createEvent({ eventInput }, { headers: { isAuthenticated, userId } }) {
+    if (!isAuthenticated) {
+      throw new Error(`Unauthenticated`);
+    }
     if (!(await User.findById(userId))) {
       throw new Error(`User doesn't exist`);
     }
