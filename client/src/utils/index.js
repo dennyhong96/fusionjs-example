@@ -119,3 +119,18 @@ export function isJson(json) {
     return false;
   }
 }
+
+export function formatDate(dateString) {
+  return new Date(dateString).toLocaleDateString();
+}
+
+export function formatUsername(email) {
+  return email.split("@").filter(Boolean)[0];
+}
+
+export function formatPrice(price) {
+  return new Intl.NumberFormat("en-US", {
+    currency: "USD",
+    style: "currency",
+  }).format(price);
+}

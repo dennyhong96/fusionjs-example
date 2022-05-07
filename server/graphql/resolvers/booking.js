@@ -2,15 +2,16 @@ const Event = require("../../models/event");
 const User = require("../../models/user");
 const Booking = require("../../models/booking");
 const { transformBooking, transformEvent } = require("./loaders");
+const user = require("../../models/user");
 
 // Resolvers
 module.exports = {
   // Queries
-  async bookings(arg, { headers: { isAuthenticated } }) {
-    if (!isAuthenticated) {
-      throw new Error(`Unauthenticated`);
-    }
-    const bookings = await Booking.find();
+  async bookings(arg, { headers: { isAuthenticated, userId } }) {
+    if (!isAuthenticated) throw new Error(`Unauthenticated`);
+    const user = await User.findById(userId);
+    if (!user) throw new Error(`User doesn't exist`);
+    const bookings = await Booking.find({ user });
     return bookings.map((booking) => transformBooking(booking));
   },
 
@@ -44,7 +45,7 @@ module.exports = {
     if (booking.user.toString() !== userId) {
       throw new Error("Insufficient permissions");
     }
-    await Booking.deleteOne({ id: bookingId });
+    await Booking.findByIdAndRemove(bookingId);
     return transformEvent(booking.event);
   },
 };

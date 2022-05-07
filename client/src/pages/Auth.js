@@ -2,9 +2,9 @@ import { useMutation } from "react-apollo";
 import gql from "graphql-tag";
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { styled } from "fusion-plugin-styletron-react";
 
-import { loginUserAction } from "../../store/actions";
+import { loginUserAction } from "../store/actions";
+import Form from "../components/Form";
 
 const CREATE_USER = gql`
   mutation CreateUser($email: String!, $password: String!) {
@@ -12,14 +12,6 @@ const CREATE_USER = gql`
       _id
       email
       password
-      createdEvents {
-        _id
-        title
-        description
-        price
-        date
-      }
-      __typename
     }
   }
 `;
@@ -36,38 +28,6 @@ const LOGIN = gql`
     }
   }
 `;
-
-const Form = styled("form", {
-  width: "100%",
-  maxWidth: "500px",
-  display: "flex",
-  flexDirection: "column",
-  padding: "2rem",
-  margin: "auto",
-  gap: "1rem",
-});
-
-const Label = styled("label", {
-  display: "flex",
-  flexDirection: "column",
-  gap: "0.5rem",
-});
-
-const Input = styled("input", {
-  height: "40px",
-  font: "inherit",
-  paddingLeft: "0.5rem",
-  paddingRight: "0.5rem",
-  borderRadius: 0,
-  border: "1px solid #000",
-});
-
-const Button = styled("button", {
-  font: "inherit",
-  border: "initial",
-  padding: "0.5rem 1rem",
-  cursor: "pointer",
-});
 
 export default function AuthPage({}) {
   const [isRegisterMode, setIsRegisterMode] = useState(false);
@@ -98,34 +58,34 @@ export default function AuthPage({}) {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Label>
+      <Form.Field>
         <span>Email:</span>
-        <Input ref={emailRef} type="text" />
-      </Label>
-      <Label>
+        <input ref={emailRef} type="text" />
+      </Form.Field>
+      <Form.Field>
         <span>Password:</span>
-        <Input ref={passwordRef} type="password" />
-      </Label>
-      <Button type="submit">{!isRegisterMode ? "Sign In" : "Register"}</Button>
+        <input ref={passwordRef} type="password" />
+      </Form.Field>
+      <button type="submit">{!isRegisterMode ? "Sign In" : "Register"}</button>
       {isRegisterMode ? (
         <small>
           Already have an account?{" "}
-          <Button
+          <button
             type="button"
             onClick={() => setIsRegisterMode((prev) => !prev)}
           >
             Sign in
-          </Button>
+          </button>
         </small>
       ) : (
         <small>
           Don't have an account?{" "}
-          <Button
+          <button
             type="button"
             onClick={() => setIsRegisterMode((prev) => !prev)}
           >
             Register
-          </Button>
+          </button>
         </small>
       )}
     </Form>

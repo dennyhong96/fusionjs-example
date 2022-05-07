@@ -2,8 +2,8 @@ import { Fragment, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Helmet } from "fusion-plugin-react-helmet-async";
 
-import { Router } from "../../router";
-import { loginUserFromStorage } from "../../store/actions";
+import { Router } from "../router";
+import { loginUserFromStorage } from "../store/actions";
 
 const Root = () => {
   const dispatch = useDispatch();
@@ -29,6 +29,27 @@ const Root = () => {
               padding: 0;
               margin: 0;
               box-sizing: border-box;
+            }
+
+            button {
+              font: inherit;
+              border: initial;
+              padding: 0.5rem 1rem;
+              cursor: pointer;
+            }
+
+            input {
+              height: 40px;
+              font: inherit;
+              padding-left: 0.5rem;
+              padding-right: 0.5rem;
+              border-radius: 0;
+              border: 1px solid #333;
+            }
+
+            ul,
+            ol {
+              list-style: none;
             }
           `}
         </style>

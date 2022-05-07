@@ -4,6 +4,7 @@ import { NavLink } from "fusion-plugin-react-router";
 import { useDispatch, useSelector } from "react-redux";
 
 import { logoutUserAction } from "../store/actions";
+import Container from "../components/Container";
 
 const Header = styled("header", {
   position: "fixed",
@@ -23,9 +24,6 @@ const Spacer = styled("div", {
 const Nav = styled("nav", {
   width: "100%",
   height: "100%",
-  maxWidth: "1300px",
-  paddingLeft: "2rem",
-  paddingRight: "2rem",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
@@ -47,23 +45,16 @@ const Link = styled(NavLink, {
 });
 
 const Button = styled("button", {
-  font: "inherit",
   background: "initial",
-  border: "initial",
-  cursor: "pointer",
+  padding: "0",
   ":hover": {
     textDecoration: "underline",
   },
 });
 
 const Main = styled("main", {
-  width: "100%",
-  maxWidth: "1300px",
   paddingTop: "3rem",
   paddingBottom: "3rem",
-  paddingLeft: "2rem",
-  paddingRight: "2rem",
-  margin: "auto",
 });
 
 export default function DefaultLayout({ children }) {
@@ -73,37 +64,43 @@ export default function DefaultLayout({ children }) {
   return (
     <Fragment>
       <Header>
-        <Nav>
-          <Link to={"/"}>
-            <h4>EasyEvents</h4>
-          </Link>
-          <NavItems>
-            <li>
-              <Link to={"/"}>Events</Link>
-            </li>
-            {!isLoggedIn && (
+        <Container>
+          <Nav>
+            <Link to={"/"}>
+              <h4>EasyEvents</h4>
+            </Link>
+            <NavItems>
               <li>
-                <Link to={"/auth"}>Login/Signup</Link>
+                <Link to={"/"}>Events</Link>
               </li>
-            )}
-            {isLoggedIn && (
-              <Fragment>
+              {!isLoggedIn && (
                 <li>
-                  <Link to={"/bookings"}>My Bookings</Link>
+                  <Link to={"/auth"}>Login/Signup</Link>
                 </li>
-                <li>
-                  <Button onClick={() => dispatch(logoutUserAction())}>
-                    Logout
-                  </Button>
-                </li>
-              </Fragment>
-            )}
-          </NavItems>
-        </Nav>
+              )}
+              {isLoggedIn && (
+                <Fragment>
+                  <li>
+                    <Link to={"/bookings"}>My Bookings</Link>
+                  </li>
+                  <li>
+                    <Button onClick={() => dispatch(logoutUserAction())}>
+                      Logout
+                    </Button>
+                  </li>
+                </Fragment>
+              )}
+            </NavItems>
+          </Nav>
+        </Container>
       </Header>
       <Spacer />
-      <Main>{children}</Main>
-      <footer>Footer</footer>
+      <Main>
+        <Container>{children}</Container>
+      </Main>
+      <footer>
+        <Container>EasyEvents | {new Date().getFullYear()}</Container>
+      </footer>
     </Fragment>
   );
 }
