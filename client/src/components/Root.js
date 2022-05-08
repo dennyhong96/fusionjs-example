@@ -38,11 +38,10 @@ const Root = () => {
               cursor: pointer;
             }
 
-            input {
-              height: 40px;
+            input,
+            textarea {
               font: inherit;
-              padding-left: 0.5rem;
-              padding-right: 0.5rem;
+              padding: 0.5rem;
               border-radius: 0;
               border: 1px solid #333;
             }

@@ -1,3 +1,5 @@
+import { styled } from "fusion-plugin-styletron-react";
+
 import {
   cloneElement,
   Fragment,
@@ -8,7 +10,7 @@ import {
   useImperativeHandle,
   forwardRef,
 } from "react";
-import { styled } from "fusion-plugin-styletron-react";
+import useSafeDispatch from "../hooks/useSafeDispath";
 
 const FOCUSABLE_EL_SELECTORS =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled]), details:not([disabled]), summary:not(:disabled)';
@@ -40,8 +42,7 @@ const Content = styled("div", {
   width: "max-content",
   background: "rgba(255, 255, 255, 1)",
   padding: "2rem",
-  borderRadius: "5px",
-  ":foucs": {
+  ":focus": {
     outline: "2px solid -webkit-focus-ring-color",
   },
 });
@@ -75,7 +76,8 @@ const Modal = forwardRef(
     handleRef
   ) => {
     // states
-    const [internalOpen, setInternalOpen] = useState(initialOpen);
+    const [internalOpen, unsafeSetInternalOpen] = useState(initialOpen);
+    const setInternalOpen = useSafeDispatch(unsafeSetInternalOpen);
 
     // derived states
     const isExternalControll = externalOpen !== undefined;

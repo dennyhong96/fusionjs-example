@@ -1,36 +1,15 @@
-import { useMutation } from "react-apollo";
-import gql from "graphql-tag";
 import { useRef, useState } from "react";
+import { useMutation } from "react-apollo";
 import { useDispatch } from "react-redux";
 
-import { loginUserAction } from "../store/actions";
 import Form from "../components/Form";
-
-const CREATE_USER = gql`
-  mutation CreateUser($email: String!, $password: String!) {
-    createUser(userInput: { email: $email, password: $password }) {
-      _id
-      email
-      password
-    }
-  }
-`;
-
-const LOGIN = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      user {
-        _id
-        email
-      }
-      token
-      tokenExp
-    }
-  }
-`;
+import { loginUserAction } from "../store/actions";
+import { CREATE_USER, LOGIN } from "../graphql/user";
+import useSafeDispatch from "../hooks/useSafeDispath";
 
 export default function AuthPage({}) {
-  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const [isRegisterMode, unsafeSetIsRegisterMode] = useState(false);
+  const setIsRegisterMode = useSafeDispatch(unsafeSetIsRegisterMode);
   const [createUser] = useMutation(CREATE_USER);
   const [login] = useMutation(LOGIN);
   const dispatch = useDispatch();
@@ -40,8 +19,8 @@ export default function AuthPage({}) {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
+    const email = emailRef.current?.value?.trim() ?? "";
+    const password = passwordRef.current?.value?.trim() ?? "";
     if (!email || !password) return;
     if (isRegisterMode) {
       await createUser({ variables: { email, password } });

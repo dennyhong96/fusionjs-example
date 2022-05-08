@@ -121,7 +121,13 @@ export function isJson(json) {
 }
 
 export function formatDate(dateString) {
-  return new Date(dateString).toLocaleDateString();
+  const date = new Date(dateString);
+  return date.toLocaleDateString();
+}
+
+export function formatTime(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString();
 }
 
 export function formatUsername(email) {

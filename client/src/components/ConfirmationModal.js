@@ -2,6 +2,7 @@ import { Fragment, useRef, useState } from "react";
 import { styled } from "fusion-plugin-styletron-react";
 
 import Modal from "./Modal";
+import useSafeDispatch from "../hooks/useSafeDispath";
 
 const ConfirmationDialog = styled("div", {
   width: "400px",
@@ -24,7 +25,8 @@ export default function ConfirmationModal({
   confirmText = "Confirm",
   onConfirm,
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, unsafeSetOpen] = useState(false);
+  const setOpen = useSafeDispatch(unsafeSetOpen);
 
   const triggerRef = useRef(null);
 

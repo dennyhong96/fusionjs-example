@@ -1,25 +1,11 @@
 import { useRef } from "react";
 import { styled } from "fusion-plugin-styletron-react";
 import { useMutation } from "react-apollo";
-import gql from "graphql-tag";
 
+import useApolloCache from "../hooks/useApolloCache";
 import Modal from "./Modal";
 import Form from "./Form";
-
-const CREATE_EVENT = gql`
-  mutation CreatEvent($eventInput: EventInput!) {
-    createEvent(eventInput: $eventInput) {
-      _id
-      title
-      description
-      price
-      date
-      createdBy {
-        email
-      }
-    }
-  }
-`;
+import { CREATE_EVENT, GET_EVENTS } from "../graphql/event";
 
 const Actions = styled("div", {
   display: "flex",
@@ -29,6 +15,10 @@ const Actions = styled("div", {
 
 export function CreateEventModal() {
   const [createEvent] = useMutation(CREATE_EVENT);
+  const { updateCache } = useApolloCache({
+    query: GET_EVENTS,
+    cacheKey: "events",
+  });
 
   const titleRef = useRef(null);
   const descRef = useRef(null);
@@ -39,14 +29,16 @@ export function CreateEventModal() {
 
   const handleCreateEvent = async (evt) => {
     evt.preventDefault();
-    const title = titleRef.current?.value;
+    const title = titleRef.current?.value?.trim() ?? "";
     const description = descRef.current?.value;
-    const price = Number(priceRef.current?.value);
-    const date = dateRef.current?.value;
+    const price = Number(priceRef.current?.value?.trim());
+    const date = dateRef.current?.value?.trim() ?? "";
     if (!title || !description || !isFinite(price) || !date) {
       return;
     }
-    await createEvent({
+    const {
+      data: { createEvent: newEvent },
+    } = await createEvent({
       variables: {
         eventInput: {
           title,
@@ -56,6 +48,7 @@ export function CreateEventModal() {
         },
       },
     });
+    updateCache((events) => [...events, newEvent]);
     closeCreateEventModal();
   };
 
@@ -69,7 +62,7 @@ export function CreateEventModal() {
         </Form.Field>
         <Form.Field>
           <span>Description:</span>
-          <input ref={descRef} type="text" />
+          <textarea ref={descRef} rows={3} />
         </Form.Field>
         <Form.Field>
           <span>Price:</span>
@@ -77,7 +70,7 @@ export function CreateEventModal() {
         </Form.Field>
         <Form.Field>
           <span>Date:</span>
-          <input ref={dateRef} type="date" />
+          <input ref={dateRef} type="datetime-local" />
         </Form.Field>
         <Actions>
           <button onClick={closeCreateEventModal} type="button">

@@ -57,6 +57,13 @@ const Main = styled("main", {
   paddingBottom: "3rem",
 });
 
+const Footer = styled("footer", {
+  background: "#fff",
+  borderTop: "1px solid #eee",
+  paddingTop: "3rem",
+  paddingBottom: "3rem",
+});
+
 export default function DefaultLayout({ children }) {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -98,9 +105,9 @@ export default function DefaultLayout({ children }) {
       <Main>
         <Container>{children}</Container>
       </Main>
-      <footer>
+      <Footer>
         <Container>EasyEvents | {new Date().getFullYear()}</Container>
-      </footer>
+      </Footer>
     </Fragment>
   );
 }

@@ -27,7 +27,11 @@ module.exports = {
     if (!event) {
       throw new Error(`Event doesn't exist`);
     }
-    const booking = await Booking.create({
+    let booking = await Booking.findOne({ user: userId, event: eventId });
+    if (booking) {
+      throw new Error("You have already booked this event");
+    }
+    booking = await Booking.create({
       user: userId,
       event,
     });
