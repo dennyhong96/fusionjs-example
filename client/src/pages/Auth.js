@@ -1,6 +1,7 @@
-import { useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { useMutation } from "react-apollo";
 import { useDispatch } from "react-redux";
+import { Helmet } from "fusion-plugin-react-helmet-async";
 
 import Form from "../components/Form";
 import { loginUserAction } from "../store/actions";
@@ -36,37 +37,44 @@ export default function AuthPage({}) {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Field>
-        <span>Email:</span>
-        <input ref={emailRef} type="text" />
-      </Form.Field>
-      <Form.Field>
-        <span>Password:</span>
-        <input ref={passwordRef} type="password" />
-      </Form.Field>
-      <button type="submit">{!isRegisterMode ? "Sign In" : "Register"}</button>
-      {isRegisterMode ? (
-        <small>
-          Already have an account?{" "}
-          <button
-            type="button"
-            onClick={() => setIsRegisterMode((prev) => !prev)}
-          >
-            Sign in
-          </button>
-        </small>
-      ) : (
-        <small>
-          Don't have an account?{" "}
-          <button
-            type="button"
-            onClick={() => setIsRegisterMode((prev) => !prev)}
-          >
-            Register
-          </button>
-        </small>
-      )}
-    </Form>
+    <Fragment>
+      <Helmet>
+        <title>Login/Signup | EasyEvents</title>
+      </Helmet>
+      <Form onSubmit={handleSubmit}>
+        <Form.Field>
+          <span>Email:</span>
+          <input ref={emailRef} type="text" />
+        </Form.Field>
+        <Form.Field>
+          <span>Password:</span>
+          <input ref={passwordRef} type="password" />
+        </Form.Field>
+        <button type="submit">
+          {!isRegisterMode ? "Sign In" : "Register"}
+        </button>
+        {isRegisterMode ? (
+          <small>
+            Already have an account?{" "}
+            <button
+              type="button"
+              onClick={() => setIsRegisterMode((prev) => !prev)}
+            >
+              Sign in
+            </button>
+          </small>
+        ) : (
+          <small>
+            Don't have an account?{" "}
+            <button
+              type="button"
+              onClick={() => setIsRegisterMode((prev) => !prev)}
+            >
+              Register
+            </button>
+          </small>
+        )}
+      </Form>
+    </Fragment>
   );
 }

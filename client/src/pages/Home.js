@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { useQuery } from "react-apollo";
 import { useSelector } from "react-redux";
 import { styled } from "fusion-plugin-styletron-react";
+import { Helmet } from "fusion-plugin-react-helmet-async";
 
 import Card from "../components/Card";
 import { CreateEventModal } from "../components/CreateEventModal";
@@ -30,6 +31,9 @@ export default function HomePage({}) {
 
   return (
     <Fragment>
+      <Helmet>
+        <title>Events | EasyEvents</title>
+      </Helmet>
       <PageWrapper>
         {isLoggedIn && (
           <Card>

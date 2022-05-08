@@ -1,5 +1,7 @@
+import { Fragment } from "react";
 import { useQuery } from "react-apollo";
 import { styled } from "fusion-plugin-styletron-react";
+import { Helmet } from "fusion-plugin-react-helmet-async";
 
 import { GET_BOOKINGS } from "../graphql/booking";
 import BookingCard from "../components/BookingCard";
@@ -16,16 +18,24 @@ export default function BookingsPage({}) {
     fetchPolicy: "cache-and-network",
   });
 
-  if (loading) return <Loader />;
-  return data.bookings.length === 0 ? (
-    <p>You have no bookings</p>
-  ) : (
-    <BookingList>
-      {data.bookings.map((booking) => (
-        <li key={booking._id}>
-          <BookingCard booking={booking} />
-        </li>
-      ))}
-    </BookingList>
+  return (
+    <Fragment>
+      <Helmet>
+        <title>My bookings | EasyEvents</title>
+      </Helmet>
+      {loading && <Loader />}
+      {!loading &&
+        (data.bookings.length === 0 ? (
+          <p>You have no bookings</p>
+        ) : (
+          <BookingList>
+            {data.bookings.map((booking) => (
+              <li key={booking._id}>
+                <BookingCard booking={booking} />
+              </li>
+            ))}
+          </BookingList>
+        ))}
+    </Fragment>
   );
 }
