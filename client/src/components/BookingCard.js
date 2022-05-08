@@ -8,7 +8,7 @@ import { formatDate, formatPrice, formatTime, formatUsername } from "../utils";
 
 export default function BookingCard({ booking }) {
   const [cancelBooking] = useMutation(CANCEL_BOOKING);
-  const { updateCache } = useApolloCache({
+  const { updateCachedData } = useApolloCache({
     query: GET_BOOKINGS,
     cacheKey: "bookings",
   });
@@ -17,7 +17,9 @@ export default function BookingCard({ booking }) {
     await cancelBooking({
       variables: { bookingId },
     });
-    updateCache((bookings) => bookings.filter((b) => b._id !== booking._id));
+    updateCachedData((bookings) =>
+      bookings.filter((b) => b._id !== booking._id)
+    );
   };
 
   return (

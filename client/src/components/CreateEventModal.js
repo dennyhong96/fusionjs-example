@@ -15,7 +15,7 @@ const Actions = styled("div", {
 
 export function CreateEventModal() {
   const [createEvent] = useMutation(CREATE_EVENT);
-  const { updateCache } = useApolloCache({
+  const { updateCachedData } = useApolloCache({
     query: GET_EVENTS,
     cacheKey: "events",
   });
@@ -48,7 +48,7 @@ export function CreateEventModal() {
         },
       },
     });
-    updateCache((events) => [...events, newEvent]);
+    updateCachedData((events) => [...events, newEvent]);
     closeCreateEventModal();
   };
 

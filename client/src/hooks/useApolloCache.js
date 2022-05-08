@@ -4,22 +4,27 @@ import { useApolloClient } from "react-apollo";
 export default function useApolloCache({ query, cacheKey }) {
   const client = useApolloClient();
 
-  const updateCache = useCallback(
+  const getCachedData = useCallback(() => {
+    let items;
+    try {
+      const data = client.readQuery({ query });
+      items = data[cacheKey];
+    } catch (error) {
+      items = [];
+    }
+    return items;
+  }, [client, query, cacheKey]);
+
+  const updateCachedData = useCallback(
     (onUpdate) => {
-      let items;
-      try {
-        const data = client.readQuery({ query });
-        items = data[cacheKey];
-      } catch (error) {
-        items = [];
-      }
+      const items = getCachedData();
       client.writeQuery({
         query,
         data: { [cacheKey]: onUpdate(items) },
       });
     },
-    [client, query, cacheKey]
+    [getCachedData, client, query, cacheKey]
   );
 
-  return { updateCache };
+  return { getCachedData, updateCachedData };
 }

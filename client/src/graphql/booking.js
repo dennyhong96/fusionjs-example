@@ -12,6 +12,7 @@ export const GET_BOOKINGS = gql`
         price
         date
         createdBy {
+          _id
           email
         }
       }
@@ -31,6 +32,7 @@ export const CREATE_BOOKING = gql`
         price
         date
         createdBy {
+          _id
           email
         }
       }
@@ -46,6 +48,7 @@ export const CANCEL_BOOKING = gql`
       price
       date
       createdBy {
+        _id
         email
       }
     }

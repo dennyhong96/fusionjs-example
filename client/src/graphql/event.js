@@ -10,6 +10,7 @@ export const GET_EVENTS = gql`
       price
       date
       createdBy {
+        _id
         email
       }
     }
@@ -26,6 +27,7 @@ export const CREATE_EVENT = gql`
       price
       date
       createdBy {
+        _id
         email
       }
     }

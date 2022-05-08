@@ -6,7 +6,7 @@ const STATUS = {
   Idle: "idle",
   Pending: "pending",
   Fulfilled: "fulfilled",
-  Rejected: "rejected"
+  Rejected: "rejected",
 };
 
 const reducer = (state, action) => {
@@ -16,17 +16,16 @@ const reducer = (state, action) => {
 export default function useAsync({
   data: initialData = null,
   error: initialError = null,
-  status: inisitalStatus = STATUS.Idle
+  status: inisitalStatus = STATUS.Idle,
 } = {}) {
   const initialConfig = useMemo(
     () => ({
       status: inisitalStatus,
       data: initialData,
-      error: initialError
+      error: initialError,
     }),
     []
   );
-  console.log("rerender");
 
   //states
   const [state, unsafeDispatch] = useReducer(reducer, initialConfig);
@@ -51,7 +50,7 @@ export default function useAsync({
       promiseRef.current = promise;
       dispatch({
         ...initialConfig,
-        status: STATUS.Pending
+        status: STATUS.Pending,
       });
       promise
         .then((res) => {
@@ -59,7 +58,7 @@ export default function useAsync({
           dispatch({
             ...initialConfig,
             status: STATUS.Fulfilled,
-            data: res
+            data: res,
           });
         })
         .catch((err) => {
@@ -77,6 +76,6 @@ export default function useAsync({
   return {
     ...state,
     run,
-    reset
+    reset,
   };
 }

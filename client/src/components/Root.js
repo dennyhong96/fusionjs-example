@@ -37,6 +37,10 @@ const Root = () => {
               padding: 0.5rem 1rem;
               cursor: pointer;
             }
+            button:disabled {
+              opacity: 0.9;
+              cursor: not-allowed;
+            }
 
             input,
             textarea {
