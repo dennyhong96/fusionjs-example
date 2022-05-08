@@ -7,6 +7,7 @@ import Card from "../components/Card";
 import { CreateEventModal } from "../components/CreateEventModal";
 import EventCard from "../components/EventCard";
 import { EventDetailsModal } from "../components/EventDetailsModal";
+import Loader from "../components/Loader";
 import { GET_EVENTS } from "../graphql/event";
 
 const PageWrapper = styled("div", {
@@ -37,7 +38,7 @@ export default function HomePage({}) {
             </Card.Column>
           </Card>
         )}
-        {loading && <p>Loading...</p>}
+        {loading && <Loader />}
         {!loading && (
           <EventList>
             {data.events.length === 0 && <p>No events listed</p>}

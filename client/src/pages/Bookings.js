@@ -3,6 +3,7 @@ import { styled } from "fusion-plugin-styletron-react";
 
 import { GET_BOOKINGS } from "../graphql/booking";
 import BookingCard from "../components/BookingCard";
+import Loader from "../components/Loader";
 
 const BookingList = styled("ul", {
   display: "flex",
@@ -15,7 +16,7 @@ export default function BookingsPage({}) {
     fetchPolicy: "cache-and-network",
   });
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
   return data.bookings.length === 0 ? (
     <p>You have no bookings</p>
   ) : (

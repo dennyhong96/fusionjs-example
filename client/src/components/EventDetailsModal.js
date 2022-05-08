@@ -9,6 +9,7 @@ import Modal from "./Modal";
 import { CREATE_BOOKING, GET_BOOKINGS } from "../graphql/booking";
 import { GET_EVENTS } from "../graphql/event";
 import { formatDate, formatPrice, formatTime, formatUsername } from "../utils";
+import useSafeDispatch from "../hooks/useSafeDispath";
 
 const Details = styled("div", {
   width: "600px",
@@ -24,7 +25,8 @@ const Actions = styled("div", {
 });
 
 export function EventDetailsModal() {
-  const [event, setEvent] = useState(null);
+  const [event, unsafeSetEvent] = useState(null);
+  const setEvent = useSafeDispatch(unsafeSetEvent);
   const { data } = useQuery(GET_EVENTS);
   const [createBooking] = useMutation(CREATE_BOOKING);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);

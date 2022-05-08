@@ -6,10 +6,12 @@ import { Router } from "../router";
 import { loginUserFromStorage } from "../store/actions";
 
 const Root = () => {
+  // Kick-off authentication
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(loginUserFromStorage());
   }, []);
+
   return (
     <Fragment>
       <Helmet>
