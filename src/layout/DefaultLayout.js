@@ -3,7 +3,7 @@ import { styled } from "fusion-plugin-styletron-react";
 import { NavLink } from "fusion-plugin-react-router";
 import { useDispatch, useSelector } from "react-redux";
 
-import { logoutUserAction } from "../store/actions";
+import { logoutUserAction } from "../store/client/actions";
 import Container from "../components/Container";
 
 const Header = styled("header", {

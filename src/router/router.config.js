@@ -19,7 +19,7 @@ export const routes = [
     isPublic: true,
   },
   {
-    component: require("../pages/Auth").default,
+    component: require("../pages/Bookings").default,
     name: "bookings",
     path: "/bookings",
     title: "Bookings",

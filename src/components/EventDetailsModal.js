@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { styled } from "fusion-plugin-styletron-react";
 import { useMutation, useQuery } from "react-apollo";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "fusion-plugin-react-router";
+import { Helmet } from "fusion-plugin-react-helmet-async";
 
 import useApolloCache from "../hooks/useApolloCache";
 import Modal from "./Modal";
@@ -12,7 +13,7 @@ import { formatDate, formatPrice, formatTime, formatUsername } from "../utils";
 import useSafeDispatch from "../hooks/useSafeDispath";
 
 const Details = styled("div", {
-  width: "600px",
+  width: "100%",
   display: "flex",
   flexDirection: "column",
   gap: "1rem",
@@ -67,25 +68,30 @@ export function EventDetailsModal() {
   };
 
   return (
-    <Modal open={!!event} onClose={handleClose}>
+    <Modal open={!!event} onClose={handleClose} $maxWidth="600px">
       {event && (
-        <Details>
-          <h4>{event.title}</h4>
-          <p>{event.description}</p>
-          <p>Date: {formatDate(event.date)}</p>
-          <p>Time: {formatTime(event.date)}</p>
-          <p>Host: {formatUsername(event.createdBy.email)}</p>
-          <p>Price: {formatPrice(event.price)}</p>
-          <Actions>
-            <button onClick={handleClose}>Go back</button>
-            <button
-              disabled={!isLoggedIn || isMyEvent}
-              onClick={handleBooking.bind(null, event._id)}
-            >
-              Book event
-            </button>
-          </Actions>
-        </Details>
+        <Fragment>
+          <Helmet>
+            <title>{event.title} | EasyEvents</title>
+          </Helmet>
+          <Details>
+            <h4>{event.title}</h4>
+            <p>{event.description}</p>
+            <p>Date: {formatDate(event.date)}</p>
+            <p>Time: {formatTime(event.date)}</p>
+            <p>Host: {formatUsername(event.createdBy.email)}</p>
+            <p>Price: {formatPrice(event.price)}</p>
+            <Actions>
+              <button onClick={handleClose}>Go back</button>
+              <button
+                disabled={!isLoggedIn || isMyEvent}
+                onClick={handleBooking.bind(null, event._id)}
+              >
+                Book event
+              </button>
+            </Actions>
+          </Details>
+        </Fragment>
       )}
     </Modal>
   );

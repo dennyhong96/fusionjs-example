@@ -5,7 +5,7 @@ import Modal from "./Modal";
 import useSafeDispatch from "../hooks/useSafeDispath";
 
 const ConfirmationDialog = styled("div", {
-  width: "400px",
+  width: "100%",
   display: "flex",
   flexDirection: "column",
   gap: "1rem",
@@ -36,6 +36,7 @@ export default function ConfirmationModal({
         {triggerText}
       </button>
       <Modal
+        $maxWidth="450px"
         open={open}
         onClose={() => setOpen(false)}
         returnFocusRef={triggerRef}

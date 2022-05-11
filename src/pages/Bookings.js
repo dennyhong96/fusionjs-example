@@ -5,7 +5,6 @@ import { Helmet } from "fusion-plugin-react-helmet-async";
 
 import { GET_BOOKINGS } from "../graphql/client/booking";
 import BookingCard from "../components/BookingCard";
-import Loader from "../components/Loader";
 
 const BookingList = styled("ul", {
   display: "flex",
@@ -23,8 +22,7 @@ export default function BookingsPage({}) {
       <Helmet>
         <title>My bookings | EasyEvents</title>
       </Helmet>
-      {loading && <Loader />}
-      {!loading &&
+      {!!data?.bookings &&
         (data.bookings.length === 0 ? (
           <p>You have no bookings</p>
         ) : (

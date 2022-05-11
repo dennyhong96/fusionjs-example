@@ -33,18 +33,25 @@ const Backdrop = styled("div", {
   background: "rgba(0, 0, 0, 0.2)",
 });
 
-const Content = styled("div", {
+const ContentWrapper = styled("div", ({ $maxWidth }) => ({
   position: "absolute",
   left: "50%",
   top: "50%",
   transform: "translate(-50%, -50%)",
   zIndex: 1,
-  width: "max-content",
+  padding: "2rem",
+  width: "100%",
+  maxWidth: $maxWidth,
+}));
+
+const Content = styled("div", {
+  position: "relative",
   background: "rgba(255, 255, 255, 1)",
   padding: "2rem",
   ":focus": {
     outline: "2px solid -webkit-focus-ring-color",
   },
+  width: "100%",
 });
 
 const Close = styled("button", {
@@ -72,6 +79,7 @@ const Modal = forwardRef(
       trigger,
       returnFocusRef,
       children,
+      $maxWidth = "600px",
     },
     handleRef
   ) => {
@@ -163,29 +171,31 @@ const Modal = forwardRef(
         {open && (
           <Wrapper>
             <Backdrop onClick={handleClose} />
-            <Content
-              aria-modal="true"
-              role="dialog"
-              ref={modalRef}
-              tabIndex={-1}
-              onKeyDown={handleKeyDown}
-            >
-              <Close onClick={handleClose}>
-                <CloseIcon
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </CloseIcon>
-              </Close>
-              {children}
-            </Content>
+            <ContentWrapper $maxWidth={$maxWidth}>
+              <Content
+                aria-modal="true"
+                role="dialog"
+                ref={modalRef}
+                tabIndex={-1}
+                onKeyDown={handleKeyDown}
+              >
+                <Close onClick={handleClose}>
+                  <CloseIcon
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </CloseIcon>
+                </Close>
+                {children}
+              </Content>
+            </ContentWrapper>
           </Wrapper>
         )}
       </Fragment>

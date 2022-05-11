@@ -1,7 +1,7 @@
 import { styled } from "fusion-plugin-styletron-react";
 
 const Form = styled("form", {
-  width: "400px",
+  width: "100%",
   display: "flex",
   flexDirection: "column",
   margin: "auto",

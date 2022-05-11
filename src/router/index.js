@@ -5,12 +5,7 @@ import PublicRoute from "./public-route";
 import { routes } from "./router.config";
 import ProtectedRoute from "./protected-route";
 import DefaultLayout from "../layout/DefaultLayout";
-
-const PageNotFound = () => (
-  <div>
-    <div>404</div>
-  </div>
-);
+import PageNotFound from "../components/PageNotFound";
 
 export function Router() {
   return (
@@ -27,6 +22,7 @@ export function Router() {
               : r.isPublic
               ? PublicRoute
               : Fragment;
+
             const Component = r.component;
             const Layout = Component.Layout ?? DefaultLayout;
             return (

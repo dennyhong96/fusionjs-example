@@ -19,7 +19,6 @@ import {
   GraphQLSchemaToken,
 } from "fusion-plugin-apollo";
 import { makeExecutableSchema } from "graphql-tools";
-
 import Redux, {
   ReduxToken,
   ReducerToken,
@@ -29,8 +28,7 @@ import Redux, {
 import ReduxActionEmitterEnhancer from "fusion-plugin-redux-action-emitter-enhancer";
 
 import Root from "./components/Root";
-import rootReducer from "./store/reducers";
-import authLink from "./graphql/client/links/authLink";
+import rootReducer from "./store/client/reducers";
 import errorLink from "./graphql/client/links/errorLink";
 
 export default async function start() {
@@ -49,21 +47,16 @@ export default async function start() {
   app.enhance(RenderToken, ApolloRenderEnhancer);
   app.register(ApolloClientCredentialsToken, "include");
   if (__BROWSER__) {
-    app.register(GetApolloClientLinksToken, (links) => [
-      authLink,
-      errorLink,
-      ...links,
-    ]);
+    app.register(GetApolloClientLinksToken, (links) => [errorLink, ...links]);
   }
   app.register(ApolloClientToken, ApolloClientPlugin);
   if (__NODE__) {
-    // app.middleware(require("koa-bodyparser")());
-    require("mongoose").connect(process.env.MONGO_URI);
+    await require("mongoose").connect(process.env.MONGO_URI);
     app.middleware(require("./plugins/auth"));
     app.register(
       GraphQLSchemaToken,
       makeExecutableSchema({
-        typeDefs: require("./graphql/server/schema"),
+        typeDefs: require("./graphql/server/typeDefs"),
         resolvers: require("./graphql/server/resolvers"),
       })
     );
@@ -73,7 +66,9 @@ export default async function start() {
   app.register(ReduxToken, Redux);
   app.register(ReducerToken, rootReducer);
   app.register(EnhancerToken, ReduxActionEmitterEnhancer);
-  __NODE__ && app.register(GetInitialStateToken, async (ctx) => ({}));
+  // Set initial redux state on the server, then hydrate on the client
+  __NODE__ &&
+    app.register(GetInitialStateToken, require("./store/server/init"));
 
   return app;
 }

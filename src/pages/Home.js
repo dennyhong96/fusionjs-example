@@ -8,7 +8,6 @@ import Card from "../components/Card";
 import { CreateEventModal } from "../components/CreateEventModal";
 import EventCard from "../components/EventCard";
 import { EventDetailsModal } from "../components/EventDetailsModal";
-import Loader from "../components/Loader";
 import { GET_EVENTS } from "../graphql/client/event";
 import { assetUrl } from "fusion-core";
 
@@ -25,7 +24,7 @@ const EventList = styled("ul", {
 });
 
 export default function HomePage({}) {
-  const { data, loading } = useQuery(GET_EVENTS, {
+  const { data } = useQuery(GET_EVENTS, {
     fetchPolicy: "cache-and-network",
   });
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -43,8 +42,7 @@ export default function HomePage({}) {
             </Card.Column>
           </Card>
         )}
-        {loading && <Loader />}
-        {!loading && (
+        {!!data?.events && (
           <EventList>
             {data.events.length === 0 && <p>No events listed</p>}
             {data.events.map((event) => (

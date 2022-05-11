@@ -53,7 +53,11 @@ export function CreateEventModal() {
   };
 
   return (
-    <Modal ref={createEventModal} trigger={<button>Create your event</button>}>
+    <Modal
+      $maxWidth="600px"
+      ref={createEventModal}
+      trigger={<button>Create your event</button>}
+    >
       <Form onSubmit={handleCreateEvent}>
         <h4>Create your event</h4>
         <Form.Field>
