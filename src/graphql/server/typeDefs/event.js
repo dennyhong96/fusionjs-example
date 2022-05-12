@@ -6,6 +6,7 @@ type Event {
   price: Float!
   date: String!
   createdBy: User
+  bookings: [Booking!]!
 }
 
 input EventInput {

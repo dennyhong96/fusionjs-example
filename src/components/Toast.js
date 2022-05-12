@@ -7,6 +7,7 @@ const Wrapper = styled("div", {
   padding: "1rem",
   gap: "0.5rem",
   isolation: "isolate",
+  background: "#fff",
 });
 
 const Icon = styled("svg", ({ $size = 24 }) => ({
@@ -68,7 +69,6 @@ export default function Toast({ title, children, onClose }) {
             <Icon
               $size={16}
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
               viewBox="0 0 20 20"
               fill="currentColor"
             >

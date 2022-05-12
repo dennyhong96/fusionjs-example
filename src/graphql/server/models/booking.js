@@ -15,20 +15,3 @@ const bookingSchema = new Schema(
 );
 
 module.exports = model("Booking", bookingSchema);
-
-/*
-Event.findById
-Event.find
-Event.create
-Event.find({_id: {$in: eventIds}})
-
-User.findById
-User.findByIdAndUpdate
-Event.find({_id: {$in: userIds}})
-User.findOne({email})
-User.create
-
-Booking.findById
-Booking.find({user})
-Booking.findOne({user, event})
-*/

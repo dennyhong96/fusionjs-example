@@ -24,15 +24,3 @@ const eventSchema = new Schema({
 });
 
 module.exports = model("Event", eventSchema);
-
-// class Event {
-//   constructor(title, description, price, date, createdBy) {
-//     this.title = title;
-//     this.description = description;
-//     this.price = price;
-//     this.date = new Date(date).toISOString();
-//     this.createdBy = createdBy;
-//   }
-// }
-
-// export default Event;

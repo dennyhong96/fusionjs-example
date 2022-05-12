@@ -2,6 +2,7 @@ const DataLoader = require("dataloader");
 
 const Event = require("../models/event");
 const User = require("../models/user");
+const Booking = require("../models/booking");
 const { formatDate } = require("../helpers");
 
 // Dataloaders for batching DB calls
@@ -36,6 +37,11 @@ async function loadUser(userId) {
   return await userLoader.load(userId.toString());
 }
 
+async function loadBookings(eventId) {
+  const bookings = await Booking.find({ event: eventId });
+  return bookings.map((booking) => transformBooking(booking));
+}
+
 // Resovler return type transformers
 const transformUser = ({ _doc: user }) => {
   return {
@@ -55,6 +61,7 @@ const transformEvent = ({ _doc: event }) => {
     // when a response object's field value is a Function
     // GraphQL invokes it when that field is selected by the client
     createdBy: loadUser.bind(null, event.createdBy),
+    bookings: loadBookings.bind(null, event._id),
   };
 };
 

@@ -19,6 +19,24 @@ const Details = styled("div", {
   gap: "1rem",
 });
 
+const AttendeeContainer = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  gap: "0.5rem",
+});
+
+const Attendee = styled("li", {
+  display: "flex",
+  alignItems: "center",
+  gap: "0.5rem",
+});
+
+const Icon = styled("svg", ({ $size = 24 }) => ({
+  width: `${$size}px`,
+  height: `${$size}px`,
+  flex: `0 0 ${$size}px`,
+}));
+
 const Actions = styled("div", {
   display: "flex",
   justifyContent: "center",
@@ -81,6 +99,29 @@ export function EventDetailsModal() {
             <p>Time: {formatTime(event.date)}</p>
             <p>Host: {formatUsername(event.createdBy.email)}</p>
             <p>Price: {formatPrice(event.price)}</p>
+            {!!event.bookings.length && (
+              <AttendeeContainer>
+                <p>Attendees: </p>
+                <ul>
+                  {event.bookings.map((b) => (
+                    <Attendee key={b._id}>
+                      <Icon
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                          clipRule="evenodd"
+                        />
+                      </Icon>
+                      {formatUsername(b.user.email)}
+                    </Attendee>
+                  ))}
+                </ul>
+              </AttendeeContainer>
+            )}
             <Actions>
               <button onClick={handleClose}>Go back</button>
               <button

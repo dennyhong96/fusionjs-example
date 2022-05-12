@@ -13,6 +13,12 @@ export const GET_EVENTS = gql`
         _id
         email
       }
+      bookings {
+        _id
+        user {
+          email
+        }
+      }
     }
   }
 `;
@@ -29,6 +35,12 @@ export const CREATE_EVENT = gql`
       createdBy {
         _id
         email
+      }
+      bookings {
+        _id
+        user {
+          email
+        }
       }
     }
   }
