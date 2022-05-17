@@ -140,3 +140,23 @@ export function formatPrice(price) {
     style: "currency",
   }).format(price);
 }
+
+export const transformDate = (date) => new Date(date).toISOString();
+
+export const parseCookie = (cookie) => {
+  if (!cookie) return {};
+  return cookie
+    .split(";")
+    .filter(Boolean)
+    .reduce((acc, entry) => {
+      const [key, value] = entry
+        .trim()
+        .split("=")
+        .filter(Boolean)
+        .map((p) => p.trim());
+      return {
+        ...acc,
+        [key]: value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent),
+      };
+    }, {});
+};

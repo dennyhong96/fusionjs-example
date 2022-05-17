@@ -8,18 +8,13 @@ import { formatDate, formatPrice, formatTime, formatUsername } from "../utils";
 
 export default function BookingCard({ booking }) {
   const [cancelBooking] = useMutation(CANCEL_BOOKING);
-  const { updateCachedData } = useApolloCache({
-    query: GET_BOOKINGS,
-    cacheKey: "bookings",
-  });
+  const { updateCache } = useApolloCache(GET_BOOKINGS);
 
   const handleCancelEvent = async (bookingId) => {
     await cancelBooking({
       variables: { bookingId },
     });
-    updateCachedData((bookings) =>
-      bookings.filter((b) => b._id !== booking._id)
-    );
+    updateCache((bookings) => bookings.filter((b) => b._id !== booking._id));
   };
 
   return (

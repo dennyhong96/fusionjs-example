@@ -50,10 +50,7 @@ export function EventDetailsModal() {
   const [createBooking] = useMutation(CREATE_BOOKING);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const loggedInUser = useSelector((state) => state.auth.user);
-  const { updateCachedData } = useApolloCache({
-    query: GET_BOOKINGS,
-    cacheKey: "bookings",
-  });
+  const { updateCache } = useApolloCache(GET_BOOKINGS);
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
@@ -77,7 +74,7 @@ export function EventDetailsModal() {
     } = await createBooking({
       variables: { eventId },
     });
-    updateCachedData((bookings) => [...bookings, newBooking]);
+    updateCache((bookings) => [...bookings, newBooking]);
     handleClose();
   };
 

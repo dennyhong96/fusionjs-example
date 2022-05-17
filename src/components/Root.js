@@ -4,15 +4,14 @@ import { Helmet } from "fusion-plugin-react-helmet-async";
 
 import { Router } from "../router";
 import { loginUserFromStorage } from "../store/client/actions";
-import { apolloErrorEmitter } from "../graphql/client/links/errorLink";
 import ToastContiner from "./ToastContainer";
 
 const Root = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(loginUserFromStorage());
-    apolloErrorEmitter.on("APOLLO_ERROR", (err) => console.error(err));
   }, []);
+
   return (
     <Fragment>
       <Helmet>

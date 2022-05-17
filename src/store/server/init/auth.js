@@ -1,4 +1,4 @@
-const { isJson, parseCookie } = require("../../../graphql/server/helpers");
+const { isJson, parseCookie } = require("../../../utils");
 
 module.exports = getInitialAuthState = async (ctx) => {
   // Set initial redux state

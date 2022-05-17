@@ -3,7 +3,7 @@ const DataLoader = require("dataloader");
 const Event = require("../models/event");
 const User = require("../models/user");
 const Booking = require("../models/booking");
-const { formatDate } = require("../helpers");
+const { transformDate } = require("../../../utils");
 
 // Dataloaders for batching DB calls
 const eventLoader = new DataLoader(loadEvents);
@@ -56,7 +56,7 @@ const transformEvent = ({ _doc: event }) => {
   // destrcture arg  in-place to get the raw "event" object
   return {
     ...event,
-    date: formatDate(event.date),
+    date: transformDate(event.date),
 
     // when a response object's field value is a Function
     // GraphQL invokes it when that field is selected by the client
@@ -70,8 +70,8 @@ const transformBooking = ({ _doc: booking }) => {
     ...booking,
     event: loadEvent.bind(null, booking.event._id),
     user: loadUser.bind(null, booking.user._id),
-    createdAt: formatDate(booking.createdAt),
-    updatedAt: formatDate(booking.updatedAt),
+    createdAt: transformDate(booking.createdAt),
+    updatedAt: transformDate(booking.updatedAt),
   };
 };
 

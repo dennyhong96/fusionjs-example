@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 const { transformUser } = require("./loaders");
-const { formatDate } = require("../helpers");
+const { transformDate } = require("../../../utils");
 
 const hashPassword = async (password) => {
   const passwordSalt = await bcrypt.genSalt(12);
@@ -43,7 +43,7 @@ async function login(_, { email, password }) {
   return {
     user: transformUser(user),
     token: jwt.sign({ exp, data: user._doc }, process.env.JWT_PRIVATE_KEY),
-    tokenExp: formatDate(exp * 1000),
+    tokenExp: transformDate(exp * 1000),
   };
 } // login has no side effect but is considered a mutation because it's an operation that result from user actions
 

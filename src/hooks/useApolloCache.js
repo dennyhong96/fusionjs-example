@@ -1,10 +1,18 @@
 import { useCallback } from "react";
 import { useApolloClient } from "react-apollo";
 
-export default function useApolloCache({ query, cacheKey }) {
-  const client = useApolloClient();
+const getCacheKeyFromQuery = (query) =>
+  query?.definitions?.[0]?.selectionSet?.selections?.[0].name?.value ?? null;
 
-  const getCachedData = useCallback(() => {
+export default function useApolloCache(query, options = {}) {
+  const client = useApolloClient();
+  const cacheKey = getCacheKeyFromQuery(query);
+
+  if (!cacheKey) {
+    throw new Error("Cannot generate cacheKey from query");
+  }
+
+  const getCache = useCallback(() => {
     let items;
     try {
       const data = client.readQuery({ query });
@@ -15,16 +23,16 @@ export default function useApolloCache({ query, cacheKey }) {
     return items;
   }, [client, query, cacheKey]);
 
-  const updateCachedData = useCallback(
+  const updateCache = useCallback(
     (onUpdate) => {
-      const items = getCachedData();
+      const items = getCache();
       client.writeQuery({
         query,
         data: { [cacheKey]: onUpdate(items) },
       });
     },
-    [getCachedData, client, query, cacheKey]
+    [getCache, client, query, cacheKey]
   );
 
-  return { getCachedData, updateCachedData };
+  return { getCache, updateCache };
 }

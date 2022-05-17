@@ -1,14 +1,10 @@
 const jwt = require("jsonwebtoken");
 
-const { parseCookie } = require("../graphql/server/helpers");
+const { parseCookie } = require("../utils");
 
 module.exports = async function auth(ctx, next) {
   const req = ctx.request;
   const cookies = parseCookie(req.header.cookie);
-
-  // const token = req.headers["authorization"]
-  //   ?.split(" ")
-  //   ?.filter(Boolean)?.[1]; // "Bearer xxxxx"
   const token = cookies["AUTH_TOKEN"];
   if (!token) {
     req.headers.isAuthenticated = false;

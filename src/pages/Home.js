@@ -23,7 +23,7 @@ const EventList = styled("ul", {
   gap: "1rem",
 });
 
-export default function HomePage({}) {
+export default function HomePage() {
   const { data } = useQuery(GET_EVENTS, {
     fetchPolicy: "cache-and-network",
   });
