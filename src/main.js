@@ -1,4 +1,4 @@
-if (__NODE__) require("dotenv").config();
+__NODE__ && require("dotenv").config();
 import React from "react";
 import App from "fusion-react";
 import { RenderToken } from "fusion-core";
@@ -40,7 +40,9 @@ export default async function start() {
   __NODE__ && app.register(FetchToken, isomorphicFetch);
 
   app.register(HelmetPlugin);
+
   app.register(Router);
+
   app.register(Styletron);
 
   // Apollo
@@ -51,13 +53,17 @@ export default async function start() {
   }
   app.register(ApolloClientToken, ApolloClientPlugin);
   if (__NODE__) {
-    await require("mongoose").connect(process.env.MONGO_URI);
-    app.middleware(require("./plugins/auth"));
+    const mongoose = require("mongoose");
+    const auth = require("./plugins/auth");
+    const typeDefs = require("./graphql/server/typeDefs");
+    const resolvers = require("./graphql/server/resolvers");
+    await mongoose.connect(process.env.MONGO_URI);
+    app.middleware(auth);
     app.register(
       GraphQLSchemaToken,
       makeExecutableSchema({
-        typeDefs: require("./graphql/server/typeDefs"),
-        resolvers: require("./graphql/server/resolvers"),
+        typeDefs,
+        resolvers,
       })
     );
   }
@@ -66,9 +72,10 @@ export default async function start() {
   app.register(ReduxToken, Redux);
   app.register(ReducerToken, rootReducer);
   app.register(EnhancerToken, ReduxActionEmitterEnhancer);
-  // Set initial redux state on the server, then hydrate on the client
-  __NODE__ &&
-    app.register(GetInitialStateToken, require("./store/server/init"));
+  if (__NODE__) {
+    const setInitialState = require("./store/server/init");
+    app.register(GetInitialStateToken, setInitialState); // Set initial redux state on the server, then hydrate on the client
+  }
 
   return app;
 }

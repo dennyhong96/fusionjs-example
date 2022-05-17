@@ -1,10 +1,11 @@
 const jwt = require("jsonwebtoken");
 
-const { parseCookie } = require("../utils");
+const { parseCookie } = require("../utils/index");
 
 module.exports = async function auth(ctx, next) {
   const req = ctx.request;
   const cookies = parseCookie(req.header.cookie);
+
   const token = cookies["AUTH_TOKEN"];
   if (!token) {
     req.headers.isAuthenticated = false;
