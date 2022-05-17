@@ -1,10 +1,9 @@
 import { Fragment } from "react";
 import { styled } from "fusion-plugin-styletron-react";
 import { NavLink } from "fusion-plugin-react-router";
-import { useDispatch, useSelector } from "react-redux";
 
-import { logoutUserAction } from "../store/client/actions";
 import Container from "../components/Container";
+import useAuth from "../hooks/useAuth";
 
 const Header = styled("header", {
   position: "fixed",
@@ -65,8 +64,7 @@ const Footer = styled("footer", {
 });
 
 export default function DefaultLayout({ children }) {
-  const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const { isLoggedIn, logout } = useAuth();
 
   return (
     <Fragment>
@@ -91,9 +89,7 @@ export default function DefaultLayout({ children }) {
                     <Link to={"/bookings"}>My Bookings</Link>
                   </li>
                   <li>
-                    <Button onClick={() => dispatch(logoutUserAction())}>
-                      Logout
-                    </Button>
+                    <Button onClick={logout}>Logout</Button>
                   </li>
                 </Fragment>
               )}

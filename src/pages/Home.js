@@ -1,5 +1,5 @@
+import { assetUrl } from "fusion-core";
 import { Fragment } from "react";
-import { useQuery } from "react-apollo";
 import { useSelector } from "react-redux";
 import { styled } from "fusion-plugin-styletron-react";
 import { Helmet } from "fusion-plugin-react-helmet-async";
@@ -8,8 +8,8 @@ import Card from "../components/Card";
 import { CreateEventModal } from "../components/CreateEventModal";
 import EventCard from "../components/EventCard";
 import { EventDetailsModal } from "../components/EventDetailsModal";
-import { GET_EVENTS } from "../graphql/client/event";
-import { assetUrl } from "fusion-core";
+import useEvent from "../hooks/useEvent";
+import useAuth from "../hooks/useAuth";
 
 const PageWrapper = styled("div", {
   display: "flex",
@@ -24,10 +24,8 @@ const EventList = styled("ul", {
 });
 
 export default function HomePage() {
-  const { data } = useQuery(GET_EVENTS, {
-    fetchPolicy: "cache-and-network",
-  });
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const { events } = useEvent();
+  const { isLoggedIn } = useAuth();
 
   return (
     <Fragment>
@@ -42,16 +40,16 @@ export default function HomePage() {
             </Card.Column>
           </Card>
         )}
-        {!!data?.events && (
+        {
           <EventList>
-            {data.events.length === 0 && <p>No events listed</p>}
-            {data.events.map((event) => (
+            {events.length === 0 && <p>No events listed</p>}
+            {events.map((event) => (
               <li key={event._id}>
                 <EventCard event={event} />
               </li>
             ))}
           </EventList>
-        )}
+        }
       </PageWrapper>
       <EventDetailsModal />
       {/* <img src={assetUrl("../static/images/logo.png")} /> */}

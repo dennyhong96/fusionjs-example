@@ -1,11 +1,9 @@
 import { useRef } from "react";
 import { styled } from "fusion-plugin-styletron-react";
-import { useMutation } from "react-apollo";
 
-import useApolloCache from "../hooks/useApolloCache";
 import Modal from "./Modal";
 import Form from "./Form";
-import { CREATE_EVENT, GET_EVENTS } from "../graphql/client/event";
+import useEvent from "../hooks/useEvent";
 
 const Actions = styled("div", {
   display: "flex",
@@ -14,8 +12,7 @@ const Actions = styled("div", {
 });
 
 export function CreateEventModal() {
-  const [createEvent] = useMutation(CREATE_EVENT);
-  const { updateCache } = useApolloCache(GET_EVENTS);
+  const { createEvent } = useEvent();
 
   const titleRef = useRef(null);
   const descRef = useRef(null);
@@ -33,19 +30,7 @@ export function CreateEventModal() {
     if (!title || !description || !isFinite(price) || !date) {
       return;
     }
-    const {
-      data: { createEvent: newEvent },
-    } = await createEvent({
-      variables: {
-        eventInput: {
-          title,
-          description,
-          price,
-          date: new Date(date).toISOString(),
-        },
-      },
-    });
-    updateCache((events) => [...events, newEvent]);
+    await createEvent({ title, description, price, date });
     closeCreateEventModal();
   };
 

@@ -1,20 +1,13 @@
-import { useMutation } from "react-apollo";
-
-import useApolloCache from "../hooks/useApolloCache";
 import Card from "../components/Card";
 import ConfirmationModal from "../components/ConfirmationModal";
-import { CANCEL_BOOKING, GET_BOOKINGS } from "../graphql/client/booking";
 import { formatDate, formatPrice, formatTime, formatUsername } from "../utils";
+import useBooking from "../hooks/useBooking";
 
 export default function BookingCard({ booking }) {
-  const [cancelBooking] = useMutation(CANCEL_BOOKING);
-  const { updateCache } = useApolloCache(GET_BOOKINGS);
+  const { cancelBooking } = useBooking();
 
   const handleCancelEvent = async (bookingId) => {
-    await cancelBooking({
-      variables: { bookingId },
-    });
-    updateCache((bookings) => bookings.filter((b) => b._id !== booking._id));
+    await cancelBooking({ bookingId });
   };
 
   return (

@@ -1,15 +1,14 @@
 import { Fragment, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { Helmet } from "fusion-plugin-react-helmet-async";
 
 import { Router } from "../router";
-import { loginUserFromStorage } from "../store/client/actions";
 import ToastContiner from "./ToastContainer";
+import useAuth from "../hooks/useAuth";
 
 const Root = () => {
-  const dispatch = useDispatch();
+  const { silentLogin } = useAuth();
   useEffect(() => {
-    dispatch(loginUserFromStorage());
+    silentLogin();
   }, []);
 
   return (

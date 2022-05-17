@@ -1,7 +1,3 @@
-import AuthPage from "../pages/Auth";
-import BookingsPage from "../pages/Bookings";
-import HomePage from "../pages/Home";
-
 export const routes = [
   {
     component: require("../pages/Home").default,

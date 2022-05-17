@@ -1,16 +1,15 @@
 import { Fragment, useEffect, useState } from "react";
 import { styled } from "fusion-plugin-styletron-react";
-import { useMutation, useQuery } from "react-apollo";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "fusion-plugin-react-router";
 import { Helmet } from "fusion-plugin-react-helmet-async";
 
-import useApolloCache from "../hooks/useApolloCache";
 import Modal from "./Modal";
-import { CREATE_BOOKING, GET_BOOKINGS } from "../graphql/client/booking";
-import { GET_EVENTS } from "../graphql/client/event";
 import { formatDate, formatPrice, formatTime, formatUsername } from "../utils";
 import useSafeDispatch from "../hooks/useSafeDispath";
+import useBooking from "../hooks/useBooking";
+import useEvent from "../hooks/useEvent";
+import useAuth from "../hooks/useAuth";
 
 const Details = styled("div", {
   width: "100%",
@@ -44,37 +43,28 @@ const Actions = styled("div", {
 });
 
 export function EventDetailsModal() {
+  const { events } = useEvent();
+  const { createBooking } = useBooking();
+  const { user, isLoggedIn } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [event, unsafeSetEvent] = useState(null);
   const setEvent = useSafeDispatch(unsafeSetEvent);
-  const { data } = useQuery(GET_EVENTS);
-  const [createBooking] = useMutation(CREATE_BOOKING);
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const loggedInUser = useSelector((state) => state.auth.user);
-  const { updateCache } = useApolloCache(GET_BOOKINGS);
-  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const eventId = searchParams.get("eventId");
-    const events = data?.events;
-    if (events && events.length && eventId) {
+    if (events.length && eventId) {
       const event = events.find((e) => e._id === eventId);
       if (!event) return setEvent(null);
       setEvent(event);
     } else {
       setEvent(null);
     }
-  }, [searchParams, data]);
+  }, [searchParams, events]);
 
-  const isMyEvent =
-    event && isLoggedIn && event.createdBy._id === loggedInUser?._id;
+  const isMyEvent = event && isLoggedIn && event.createdBy._id === user?._id;
 
   const handleBooking = async (eventId) => {
-    const {
-      data: { createBooking: newBooking },
-    } = await createBooking({
-      variables: { eventId },
-    });
-    updateCache((bookings) => [...bookings, newBooking]);
+    await createBooking({ eventId });
     handleClose();
   };
 
