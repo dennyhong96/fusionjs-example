@@ -15,6 +15,7 @@ const Wrapper = styled("ul", {
 });
 
 export default function ToastContiner({ duration = 5000 }) {
+  // TODO: Switch to redux state
   const [toasts, setToasts] = useState([]);
 
   useEffect(() => {

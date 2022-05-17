@@ -31,6 +31,7 @@ import Root from "./components/Root";
 import rootReducer from "./store/client/reducers";
 import errorLink from "./graphql/client/links/errorLink";
 
+// TODO: Refactor with module architecture
 export default async function start() {
   const app = new App(<Root />);
 

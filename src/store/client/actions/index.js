@@ -5,8 +5,7 @@ import Cookies from "js-cookie";
 import { isJson } from "../../../utils";
 
 export const loginUserAction = ({ user, token, tokenExp }) => {
-  // localStorage.setItem("AUTH_TOKEN", token);
-  // localStorage.setItem("USER", JSON.stringify(user));
+  // TODO: refactor into service?
   Cookies.set("AUTH_TOKEN", token, { secure: true });
   Cookies.set("USER", JSON.stringify(user), { secure: true });
   return {
@@ -16,8 +15,6 @@ export const loginUserAction = ({ user, token, tokenExp }) => {
 };
 
 export const logoutUserAction = () => {
-  // localStorage.removeItem("AUTH_TOKEN");
-  // localStorage.removeItem("USER");
   Cookies.remove("AUTH_TOKEN");
   Cookies.remove("USER");
   return {
@@ -26,8 +23,6 @@ export const logoutUserAction = () => {
 };
 
 export const loginUserFromStorage = () => {
-  // const token = localStorage.getItem("AUTH_TOKEN");
-  // const userJson = localStorage.getItem("USER");
   const token = Cookies.get("AUTH_TOKEN");
   const userJson = Cookies.get("USER");
   if (!token || !userJson || !isJson(userJson)) {

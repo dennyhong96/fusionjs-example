@@ -1,6 +1,8 @@
 import { onError } from "apollo-link-error";
 import UniversalEmitter from "fusion-plugin-universal-events/dist-browser-cjs/emitter";
+import Cookies from "js-cookie";
 
+// TODO: refactor into service?
 export const apolloErrorEmitter = new UniversalEmitter();
 
 const linkError = onError(({ graphQLErrors, networkError }) => {
@@ -19,9 +21,9 @@ const linkError = onError(({ graphQLErrors, networkError }) => {
     const unAuth =
       graphQLErrors && graphQLErrors.reduce((mess) => mess.statusCode === 403);
     if (unAuth) {
-      // dispatch(loginUserAction({isLoggedIn: false}));
-    } else {
-      // dispatch(loginUserAction({isLoggedIn: true}));
+      Cookies.remove("AUTH_TOKEN");
+      Cookies.remove("USER");
+      location.assign(location);
     }
   }
   if (networkError) console.error(`[Network error]: ${networkError}`);
