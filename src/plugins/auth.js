@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const { parseCookie } = require("../utils/index");
+const { parseCookie } = require("../library");
 
 module.exports = async function auth(ctx, next) {
   const req = ctx.request;

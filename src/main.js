@@ -27,9 +27,8 @@ import Redux, {
 } from "fusion-plugin-react-redux";
 import ReduxActionEmitterEnhancer from "fusion-plugin-redux-action-emitter-enhancer";
 
-import Root from "./components/Root";
-import rootReducer from "./store/client/reducers";
-import errorLink from "./graphql/client/links/errorLink";
+import { Root } from "./library";
+import { errorLink, rootReducer } from "./app";
 
 // TODO: Refactor with module architecture
 export default async function start() {
@@ -56,8 +55,7 @@ export default async function start() {
   if (__NODE__) {
     const mongoose = require("mongoose");
     const auth = require("./plugins/auth");
-    const typeDefs = require("./graphql/server/typeDefs");
-    const resolvers = require("./graphql/server/resolvers");
+    const { typeDefs, resolvers } = require("./library/api");
     await mongoose.connect(process.env.MONGO_URI);
     app.middleware(auth);
     app.register(
@@ -74,7 +72,7 @@ export default async function start() {
   app.register(ReducerToken, rootReducer);
   app.register(EnhancerToken, ReduxActionEmitterEnhancer);
   if (__NODE__) {
-    const setInitialState = require("./store/server/init");
+    const { setInitialState } = require("./library/api");
     app.register(GetInitialStateToken, setInitialState); // Set initial redux state on the server, then hydrate on the client
   }
 

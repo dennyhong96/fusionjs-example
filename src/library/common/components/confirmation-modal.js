@@ -1,0 +1,62 @@
+import { Fragment, useRef, useState } from "react";
+import { styled } from "fusion-plugin-styletron-react";
+
+import { Modal } from ".";
+import { useSafeDispatch } from "../hooks";
+
+const ConfirmationDialog = styled("div", {
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  gap: "1rem",
+});
+
+const Actions = styled("div", {
+  display: "flex",
+  justifyContent: "center",
+  gap: "2rem",
+});
+
+export function ConfirmationModal({
+  title,
+  triggerText,
+  description,
+  cancelText = "Cancel",
+  confirmText = "Confirm",
+  onConfirm,
+}) {
+  const [open, unsafeSetOpen] = useState(false);
+  const setOpen = useSafeDispatch(unsafeSetOpen);
+
+  const triggerRef = useRef(null);
+
+  return (
+    <Fragment>
+      <button onClick={() => setOpen(true)} ref={triggerRef}>
+        {triggerText}
+      </button>
+      <Modal
+        $maxWidth="450px"
+        open={open}
+        onClose={() => setOpen(false)}
+        returnFocusRef={triggerRef}
+      >
+        <ConfirmationDialog>
+          <h4>{title}</h4>
+          <p>{description}</p>
+          <Actions>
+            <button onClick={() => setOpen(false)}>{cancelText}</button>
+            <button
+              onClick={async () => {
+                await onConfirm();
+                setOpen(false);
+              }}
+            >
+              {confirmText}
+            </button>
+          </Actions>
+        </ConfirmationDialog>
+      </Modal>
+    </Fragment>
+  );
+}
