@@ -5,8 +5,11 @@
 Add a `.env` file under the root directory and fill in the environment variables specified in the `.env.example` file.
 
 ```
-MONGO_URI="..."
-JWT_PRIVATE_KEY="..."
+MONGO_URI="..."         # Mongo DB connection URI
+GEOAPIFY_KEY="..."      # geoapify API key https://www.geoapify.com/get-started-with-maps-api
+MAPBOX_TOKEN="..."      # Mapbox access token https://docs.mapbox.com/help/getting-started/access-tokens/
+JWT_PRIVATE_KEY="..."   # A strin secret for JWT verification
+
 ```
 
 ### Development
