@@ -1,8 +1,9 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-const { parseCookie } = require("../utils/index");
+import { parseCookie } from "../library";
 
-module.exports = async function auth(ctx, next) {
+// TODO: Where does plugins folder belong?
+export async function auth(ctx, next) {
   const req = ctx.request;
   const cookies = parseCookie(req.header.cookie);
 
@@ -29,4 +30,4 @@ module.exports = async function auth(ctx, next) {
   req.headers.isAuthenticated = true;
   req.headers.userId = decodedToken.data._id;
   await next();
-};
+}

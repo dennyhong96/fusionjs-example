@@ -24,15 +24,13 @@ npm install && npm run dev
   - src/app/
     - routes
       - index.js
-      - config.js
       - protected-route.js
       - public-route.js
+      - router.config.js
     - store/
       - index.js
       - reducer.ts
       - init.js
-    - axios/
-      - index.js
   ```
 - src/modules/ folder: This folder is for Modules/Features of our app, we can treat this as containers. Each module/feature will have all its related files in same folder. We may have some module related components which we will be placing inside frames folder and components which are used in more than one module we will keep in common/components to share across the application. Reason for keeping all related files in same folder to increase maintainability and searchability.
   ```
