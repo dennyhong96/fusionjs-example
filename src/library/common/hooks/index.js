@@ -9,3 +9,4 @@ export * from "./useInitialMount";
 export * from "./useLocalStorageState";
 export * from "./usePrevValue";
 export * from "./useSafeDispath";
+export * from "./useStatic";

@@ -1,20 +1,34 @@
 import { styled } from "fusion-plugin-styletron-react";
 
-const Wrapper = styled("div", {
-  width: "100%",
+const Wrapper = styled("div", ({ $fullWidth }) => ({
+  width: $fullWidth ? "100%" : "max-content",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  padding: "1rem",
-});
+}));
 
-export function Loader() {
+export function Loader({ fullWidth = false, size = "md" } = {}) {
+  let width, height;
+  switch (size) {
+    case "sm": {
+      width = 12;
+      height = 15;
+      break;
+    }
+    case "md":
+    default: {
+      width = 24;
+      height = 30;
+      break;
+    }
+  }
+
   return (
-    <Wrapper title="Loading..." aria-label="Loading...">
+    <Wrapper $fullWidth={fullWidth} title="Loading..." aria-label="Loading...">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="30"
+        width={width}
+        height={height}
         x="0"
         y="0"
         enableBackground="new 0 0 50 50"

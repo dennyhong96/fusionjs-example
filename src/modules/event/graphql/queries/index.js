@@ -19,6 +19,25 @@ export const GET_EVENTS = gql`
           email
         }
       }
+      address
+      coordinates {
+        latitude
+        longitude
+      }
+    }
+  }
+`;
+
+// Local cache only
+export const EVENT_LOCATIONS = gql`
+  query EventLocations($query: String!) {
+    eventLocations(query: $query) {
+      _id
+      address
+      coordinates {
+        latitude
+        longitude
+      }
     }
   }
 `;

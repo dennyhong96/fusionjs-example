@@ -15,6 +15,11 @@ export const CREATE_BOOKING = gql`
           _id
           email
         }
+        address
+        coordinates {
+          latitude
+          longitude
+        }
       }
     }
   }
@@ -30,6 +35,11 @@ export const CANCEL_BOOKING = gql`
       createdBy {
         _id
         email
+      }
+      address
+      coordinates {
+        latitude
+        longitude
       }
     }
   }

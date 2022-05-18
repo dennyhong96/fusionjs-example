@@ -4,6 +4,7 @@ import { useMutation, useQuery } from "react-apollo";
 import { CANCEL_BOOKING, CREATE_BOOKING, GET_BOOKINGS } from "../../../modules";
 import { useAuth, useApolloCache } from ".";
 
+// TODO: Move to modules?
 export const useBooking = () => {
   const { updateCache } = useApolloCache(GET_BOOKINGS);
   const { isLoggedIn } = useAuth();

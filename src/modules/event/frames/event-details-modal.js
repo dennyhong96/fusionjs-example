@@ -13,6 +13,7 @@ import {
   useBooking,
   useEvent,
   useAuth,
+  Map,
 } from "../../../library";
 
 const Details = styled("div", {
@@ -90,6 +91,7 @@ export function EventDetailsModal() {
             <p>Time: {formatTime(event.date)}</p>
             <p>Host: {formatUsername(event.createdBy.email)}</p>
             <p>Price: {formatPrice(event.price)}</p>
+            <p>Address: {event.address}</p>
             {!!event.bookings.length && (
               <AttendeeContainer>
                 <p>Attendees: </p>
@@ -113,6 +115,10 @@ export function EventDetailsModal() {
                 </ul>
               </AttendeeContainer>
             )}
+            <Map
+              longitude={event.coordinates.longitude}
+              latitude={event.coordinates.latitude}
+            />
             <Actions>
               <button onClick={handleClose}>Go back</button>
               <button

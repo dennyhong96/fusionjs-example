@@ -4,7 +4,7 @@ import { useApolloClient } from "react-apollo";
 const getCacheKeyFromQuery = (query) =>
   query?.definitions?.[0]?.selectionSet?.selections?.[0].name?.value ?? null;
 
-export function useApolloCache(query, options = {}) {
+export function useApolloCache(query, { variables } = {}) {
   const client = useApolloClient();
   const cacheKey = getCacheKeyFromQuery(query);
 
@@ -15,13 +15,13 @@ export function useApolloCache(query, options = {}) {
   const getCache = useCallback(() => {
     let items;
     try {
-      const data = client.readQuery({ query });
+      const data = client.readQuery({ query, variables });
       items = data[cacheKey];
     } catch (error) {
       items = [];
     }
     return items;
-  }, [client, query, cacheKey]);
+  }, [client, query, cacheKey, variables]);
 
   const updateCache = useCallback(
     (onUpdate) => {
@@ -29,9 +29,10 @@ export function useApolloCache(query, options = {}) {
       client.writeQuery({
         query,
         data: { [cacheKey]: onUpdate(items) },
+        variables,
       });
     },
-    [getCache, client, query, cacheKey]
+    [getCache, client, query, cacheKey, variables]
   );
 
   return { getCache, updateCache };

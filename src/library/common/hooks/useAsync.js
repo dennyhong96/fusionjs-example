@@ -13,6 +13,7 @@ const reducer = (state, action) => {
   return { ...state, ...action };
 };
 
+// TODO: Double check implementation
 export function useAsync({
   data: initialData = null,
   error: initialError = null,

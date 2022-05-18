@@ -15,6 +15,11 @@ export const GET_BOOKINGS = gql`
           _id
           email
         }
+        address
+        coordinates {
+          latitude
+          longitude
+        }
       }
     }
   }

@@ -4,6 +4,7 @@ export * from "./container";
 export * from "./form";
 export * from "./layout";
 export * from "./loader";
+export * from "./map";
 export * from "./modal";
 export * from "./root";
 export * from "./toast-container";

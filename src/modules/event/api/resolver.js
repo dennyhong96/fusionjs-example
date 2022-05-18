@@ -36,10 +36,41 @@ async function createEvent(
   return transformEvent(newEvent);
 }
 
+async function searchEventLocations(
+  _,
+  { query },
+  {
+    request: {
+      headers: { isAuthenticated },
+    },
+  }
+) {
+  if (!isAuthenticated) {
+    throw new Error(`Unauthenticated`);
+  }
+  if (!query) {
+    throw new Error("Query cannot be an empty string");
+  }
+  const res = await fetch(
+    `https://api.geoapify.com/v1/geocode/autocomplete?text=${query}&apiKey=${process.env.GEOAPIFY_KEY}`
+  );
+  if (!res.ok) throw new Error("Failed to search places");
+  const { features } = await res.json();
+  return features.map((place) => ({
+    _id: place.properties.place_id,
+    address: place.properties.formatted,
+    coordinates: {
+      latitude: place.properties.lat,
+      longitude: place.properties.lon,
+    },
+  }));
+}
+
 export const eventQueries = {
   events,
 };
 
 export const eventMutations = {
   createEvent,
+  searchEventLocations,
 };

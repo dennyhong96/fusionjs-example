@@ -13,6 +13,7 @@ type Query {
 
 type Mutation {
   createEvent(eventInput: EventInput): Event!
+  searchEventLocations(query: String!): [EventLocationResult!]!
   createUser(userInput: UserInput): User!
   login(email: String!, password: String!): Auth!
   createBooking(eventId: ID!): Booking!

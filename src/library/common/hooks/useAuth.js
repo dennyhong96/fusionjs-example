@@ -10,6 +10,7 @@ import {
   logoutUserAction,
 } from "../../../modules";
 
+// TODO: Move to modules?
 export const useAuth = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
