@@ -1,8 +1,8 @@
-const gql = require("graphql-tag");
+import gql from "graphql-tag";
 
-const { userTypeDef } = require("../../modules/auth/api");
-const { bookingTypeDef } = require("../../modules/booking/api");
-const { eventTypeDef } = require("../../modules/event/api");
+import { userTypeDef } from "../../modules/auth/api";
+import { bookingTypeDef } from "../../modules/booking/api";
+import { eventTypeDef } from "../../modules/event/api";
 
 const rootTypeDef = `
 type Query {
@@ -20,11 +20,9 @@ type Mutation {
 }
 `;
 
-module.exports = {
-  typeDefs: gql`
-    ${userTypeDef}
-    ${bookingTypeDef}
-    ${eventTypeDef}
-    ${rootTypeDef}
-  `,
-};
+export const typeDefs = gql`
+  ${userTypeDef}
+  ${bookingTypeDef}
+  ${eventTypeDef}
+  ${rootTypeDef}
+`;

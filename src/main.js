@@ -1,4 +1,3 @@
-__NODE__ && require("dotenv").config();
 import React from "react";
 import App from "fusion-react";
 import { RenderToken } from "fusion-core";
@@ -30,8 +29,10 @@ import ReduxActionEmitterEnhancer from "fusion-plugin-redux-action-emitter-enhan
 import { Root } from "./library";
 import { errorLink, rootReducer } from "./app";
 
-// TODO: Refactor with module architecture
+// TODO: Group code by __NODE__ / __BROWSER__ ?
 export default async function start() {
+  __NODE__ && (await import("dotenv")).config();
+
   const app = new App(<Root />);
 
   app.register(UniversalEventsToken, UniversalEvents);
@@ -53,9 +54,9 @@ export default async function start() {
   }
   app.register(ApolloClientToken, ApolloClientPlugin);
   if (__NODE__) {
-    const mongoose = require("mongoose");
-    const auth = require("./plugins/auth");
-    const { typeDefs, resolvers } = require("./library/api");
+    const mongoose = await import("mongoose");
+    const { auth } = await import("./plugins/auth");
+    const { typeDefs, resolvers } = await import("./library/api");
     await mongoose.connect(process.env.MONGO_URI);
     app.middleware(auth);
     app.register(
@@ -72,7 +73,7 @@ export default async function start() {
   app.register(ReducerToken, rootReducer);
   app.register(EnhancerToken, ReduxActionEmitterEnhancer);
   if (__NODE__) {
-    const { setInitialState } = require("./library/api");
+    const { setInitialState } = await import("./library/api");
     app.register(GetInitialStateToken, setInitialState); // Set initial redux state on the server, then hydrate on the client
   }
 

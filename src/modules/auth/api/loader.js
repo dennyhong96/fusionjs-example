@@ -1,13 +1,13 @@
-const DataLoader = require("dataloader");
+import DataLoader from "dataloader";
 
-const { User } = require("./model");
-const { eventLoader } = require("../../event/api/loader");
+import { User } from ".";
+import { eventLoader } from "../../event/api";
 
 // Dataloaders for batching DB calls
-const userLoader = new DataLoader(loadUsers);
+export const userLoader = new DataLoader(loadUsers);
 
 // Dynamic Relationship loaders
-async function loadUsers(userIds) {
+export async function loadUsers(userIds) {
   const users = await User.find({ _id: { $in: userIds } }).select("-password");
   users.sort(
     (u1, u2) =>
@@ -16,22 +16,15 @@ async function loadUsers(userIds) {
   return users.map((user) => transformUser(user));
 }
 
-async function loadUser(userId) {
+export async function loadUser(userId) {
   return await userLoader.load(userId.toString());
 }
 
 // Resovler return type transformers
-const transformUser = ({ _doc: user }) => {
+export const transformUser = ({ _doc: user }) => {
   return {
     ...user,
     createdEvents: () =>
       eventLoader.loadMany(user.createdEvents.map((oid) => oid.toString())),
   };
-};
-
-module.exports = {
-  userLoader,
-  loadUsers,
-  loadUser,
-  transformUser,
 };

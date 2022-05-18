@@ -1,10 +1,6 @@
-const { Event } = require("../../event/api/model");
-const { User } = require("../../auth/api/model");
-const { Booking } = require("./model");
-const {
-  transformBooking,
-  transformEvent,
-} = require("../../../library/api/loaders");
+import { Booking, transformBooking } from ".";
+import { Event, transformEvent } from "../../event/api";
+import { User } from "../../auth/api";
 
 // Resolvers
 
@@ -45,7 +41,10 @@ async function createBooking(
   if (!event) {
     throw new Error(`Event doesn't exist`);
   }
-  let booking = await Booking.findOne({ user: userId, event: eventId });
+  let booking = await Booking.findOne({
+    user: userId,
+    event: eventId,
+  });
   if (booking) {
     throw new Error("You have already booked this event");
   }
@@ -79,12 +78,11 @@ async function removeBooking(
   return transformEvent(booking.event);
 }
 
-module.exports = {
-  bookingQueries: {
-    bookings,
-  },
-  bookingMutations: {
-    createBooking,
-    removeBooking,
-  },
+export const bookingQueries = {
+  bookings,
+};
+
+export const bookingMutations = {
+  createBooking,
+  removeBooking,
 };

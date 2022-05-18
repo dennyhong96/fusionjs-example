@@ -51,3 +51,5 @@ export function EventContainer() {
     </Fragment>
   );
 }
+
+export default EventContainer;

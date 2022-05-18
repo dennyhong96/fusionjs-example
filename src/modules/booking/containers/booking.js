@@ -33,3 +33,5 @@ export function BookingContainer() {
     </Fragment>
   );
 }
+
+export default BookingContainer;

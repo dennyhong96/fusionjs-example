@@ -1,9 +1,8 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-const { User } = require("./model");
-const { transformDate } = require("../../../library");
-const { transformUser } = require("../../../library/api/loaders");
+import { User, transformUser } from ".";
+import { transformDate } from "../../../library";
 
 const hashPassword = async (password) => {
   const passwordSalt = await bcrypt.genSalt(12);
@@ -47,12 +46,11 @@ async function login(_, { email, password }) {
   };
 } // login has no side effect but is considered a mutation because it's an operation that result from user actions
 
-module.exports = {
-  userQueries: {
-    users,
-  },
-  userMutations: {
-    createUser,
-    login,
-  },
+export const userQueries = {
+  users,
+};
+
+export const userMutations = {
+  createUser,
+  login,
 };

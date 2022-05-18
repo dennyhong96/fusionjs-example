@@ -9,7 +9,7 @@ export const initialAuthState = {
 };
 
 export function authReducer(state = initialAuthState, action) {
-  console.log({ state, action });
+  // console.log({ state, action });
   const { type, payload } = action;
   switch (type) {
     case LOGIN_USER: {

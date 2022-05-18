@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
   email: {
@@ -17,6 +17,4 @@ const userSchema = new Schema({
   ], // a list of event ids
 });
 
-module.exports = {
-  User: model("User", userSchema),
-};
+export const User = model("User", userSchema);

@@ -6,6 +6,7 @@ import { useAuth } from "../../library";
 export function ProtectedRoute({ children }) {
   const location = useLocation();
   const { isAuthChecked, isLoggedIn } = useAuth();
+
   if (!isAuthChecked) return <Loader />;
   if (!isLoggedIn) {
     return (

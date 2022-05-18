@@ -1,6 +1,5 @@
-const { Event } = require("./model");
-const { transformEvent } = require("../../../library/api/loaders");
-const { User } = require("../../auth/api");
+import { Event, transformEvent } from ".";
+import { User } from "../../auth/api";
 
 // Resolvers
 
@@ -37,11 +36,10 @@ async function createEvent(
   return transformEvent(newEvent);
 }
 
-module.exports = {
-  eventQueries: {
-    events,
-  },
-  eventMutations: {
-    createEvent,
-  },
+export const eventQueries = {
+  events,
+};
+
+export const eventMutations = {
+  createEvent,
 };

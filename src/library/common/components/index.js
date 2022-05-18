@@ -5,7 +5,7 @@ export * from "./form";
 export * from "./layout";
 export * from "./loader";
 export * from "./modal";
-export * from "./not-found";
 export * from "./root";
 export * from "./toast-container";
 export * from "./toast";
+export * from "./error";

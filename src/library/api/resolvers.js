@@ -1,21 +1,16 @@
-const { userQueries, userMutations } = require("../../modules/auth/api");
-const { eventQueries, eventMutations } = require("../../modules/event/api");
-const {
-  bookingQueries,
-  bookingMutations,
-} = require("../../modules/booking/api");
+import { userQueries, userMutations } from "../../modules/auth/api";
+import { eventQueries, eventMutations } from "../../modules/event/api";
+import { bookingQueries, bookingMutations } from "../../modules/booking/api";
 
-module.exports = {
-  resolvers: {
-    Query: {
-      ...userQueries,
-      ...bookingQueries,
-      ...eventQueries,
-    },
-    Mutation: {
-      ...userMutations,
-      ...bookingMutations,
-      ...eventMutations,
-    },
+export const resolvers = {
+  Query: {
+    ...userQueries,
+    ...bookingQueries,
+    ...eventQueries,
+  },
+  Mutation: {
+    ...userMutations,
+    ...bookingMutations,
+    ...eventMutations,
   },
 };

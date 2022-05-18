@@ -74,3 +74,5 @@ export function AuthContainer() {
     </Fragment>
   );
 }
+
+export default AuthContainer;

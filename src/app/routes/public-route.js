@@ -6,6 +6,7 @@ export function PublicRoute({ children }) {
   const { isLoggedIn } = useAuth();
   const location = useLocation();
   const fromPathname = location.state?.from?.pathname ?? "/";
+
   if (isLoggedIn) {
     return (
       <Navigate

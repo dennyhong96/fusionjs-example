@@ -1,15 +1,15 @@
-const DataLoader = require("dataloader");
+import DataLoader from "dataloader";
 
-const { Event } = require("./model");
-const { transformDate } = require("../../../library");
-const { loadUser } = require("../../auth/api/loader");
-const { loadBookings } = require("../../booking/api/loader");
+import { Event } from ".";
+import { loadUser } from "../../auth/api";
+import { loadBookings } from "../../booking/api";
+import { transformDate } from "../../../library";
 
 // Dataloaders for batching DB calls
-const eventLoader = new DataLoader(loadEvents);
+export const eventLoader = new DataLoader(loadEvents);
 
 // Dynamic Relationship loaders
-async function loadEvents(eventIds) {
+export async function loadEvents(eventIds) {
   const events = await Event.find({ _id: { $in: eventIds } });
   events.sort(
     (ev1, ev2) =>
@@ -19,11 +19,11 @@ async function loadEvents(eventIds) {
   return events.map((event) => transformEvent(event));
 }
 
-async function loadEvent(eventId) {
+export async function loadEvent(eventId) {
   return await eventLoader.load(eventId.toString()); // Need to make sure key passed to dataLoader is a primitive, not objectId
 }
 
-const transformEvent = ({ _doc: event }) => {
+export const transformEvent = ({ _doc: event }) => {
   // accepts a rich mongo "event" object with metadata
   // destrcture arg  in-place to get the raw "event" object
   return {
@@ -35,11 +35,4 @@ const transformEvent = ({ _doc: event }) => {
     createdBy: loadUser.bind(null, event.createdBy),
     bookings: loadBookings.bind(null, event._id),
   };
-};
-
-module.exports = {
-  eventLoader,
-  loadEvents,
-  loadEvent,
-  transformEvent,
 };

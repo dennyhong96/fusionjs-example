@@ -1,20 +1,18 @@
-module.exports = {
-  eventTypeDef: `
-  type Event {
-    _id: ID!
-    title: String!
-    description: String!
-    price: Float!
-    date: String!
-    createdBy: User
-    bookings: [Booking!]!
-  }
-  
-  input EventInput {
-    title: String!
-    description: String!
-    price: Float!
-    date: String!
-  }
-  `,
-};
+export const eventTypeDef = `
+type Event {
+  _id: ID!
+  title: String!
+  description: String!
+  price: Float!
+  date: String!
+  createdBy: User
+  bookings: [Booking!]!
+}
+
+input EventInput {
+  title: String!
+  description: String!
+  price: Float!
+  date: String!
+}
+`;
