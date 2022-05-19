@@ -1,82 +1,80 @@
-import { useCallback, useMemo, useReducer, useRef } from "react";
-
 import { useSafeDispatch } from ".";
 
 const STATUS = {
-  Idle: "idle",
-  Pending: "pending",
-  Fulfilled: "fulfilled",
-  Rejected: "rejected",
+  idle: "idle",
+  pending: "pending",
+  resolved: "resolved",
+  rejected: "rejected",
 };
 
-const reducer = (state, action) => {
-  return { ...state, ...action };
-};
+const defaultState = { status: STATUS.idle, data: null, error: null };
 
-// TODO: Double check implementation
-export function useAsync({
-  data: initialData = null,
-  error: initialError = null,
-  status: inisitalStatus = STATUS.Idle,
-} = {}) {
-  const initialConfig = useMemo(
-    () => ({
-      status: inisitalStatus,
-      data: initialData,
-      error: initialError,
-    }),
-    []
+export function useAsync(initialState) {
+  const initialStateRef = React.useRef({
+    ...defaultState,
+    ...initialState,
+  });
+  const [{ status, data, error }, setState] = React.useReducer(
+    (s, a) => ({ ...s, ...a }),
+    initialStateRef.current
   );
 
-  //states
-  const [state, unsafeDispatch] = useReducer(reducer, initialConfig);
-  //handle updating state after component unmounted
-  const dispatch = useSafeDispatch(unsafeDispatch);
+  const safeSetState = useSafeDispatch(setState);
 
-  //refs
-  //handle previous promises resovle/reject after current promise
-  const promiseRef = useRef(null);
+  const setData = React.useCallback(
+    (data) => safeSetState({ data, status: STATUS.resolved }),
+    [safeSetState]
+  );
+  const setError = React.useCallback(
+    (error) => safeSetState({ error, status: STATUS.rejected }),
+    [safeSetState]
+  );
+  const reset = React.useCallback(
+    () => safeSetState(initialStateRef.current),
+    [safeSetState]
+  );
 
-  //callbacks
-  const run = useCallback(
+  const run = React.useCallback(
     (promise) => {
-      if (!promise) return;
-      if (!(promise instanceof Promise)) {
-        if (typeof promise === "function") {
-          promise = promise(); // handle async function
-        } else {
-          promise = Promise.resolve(promise); // handle primitives
-        }
+      if (!promise || !promise.then) {
+        throw new Error(
+          `The argument passed to useAsync().run must be a promise. Maybe a function that's passed isn't returning anything?`
+        );
       }
-      promiseRef.current = promise;
-      dispatch({
-        ...initialConfig,
-        status: STATUS.Pending,
-      });
-      promise
-        .then((res) => {
-          if (promiseRef.current !== promise) return;
-          dispatch({
-            ...initialConfig,
-            status: STATUS.Fulfilled,
-            data: res,
-          });
-        })
-        .catch((err) => {
-          if (promiseRef.current !== promise) return;
-          dispatch({ ...initialConfig, status: STATUS.Rejected, error: err });
-        });
+      safeSetState({ status: STATUS.pending });
+      return promise.then(
+        (data) => {
+          setData(data);
+          return data;
+        },
+        (error) => {
+          setError(error);
+          return Promise.reject(error);
+        }
+      );
     },
-    [dispatch, initialConfig]
+    [safeSetState, setData, setError]
   );
-
-  const reset = useCallback(() => {
-    dispatch(initialConfig);
-  }, [dispatch, initialConfig]);
 
   return {
-    ...state,
+    // using the same names that react-query uses for convenience
+    isIdle: status === STATUS.idle,
+    isLoading: status === STATUS.pending,
+    isError: status === STATUS.rejected,
+    isSuccess: status === STATUS.resolved,
+
+    setData,
+    setError,
+    error,
+    status,
+    data,
     run,
     reset,
   };
 }
+
+// Example usage:
+// const {data, error, status, run} = useAsync()
+// React.useEffect(() => {
+//   run(fetchPokemon(pokemonName))
+// }, [pokemonName, run])
