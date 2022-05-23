@@ -4,7 +4,7 @@ import { Route, Routes } from "fusion-plugin-react-router";
 import { routes } from "./router.config";
 import { PublicRoute } from "./public-route";
 import { ProtectedRoute } from "./protected-route";
-import { Layout as DefaultLayout } from "../../library";
+import { Layout as DefaultLayout } from "../../library/common/components";
 
 const getRouteElement = (route) => {
   const Guard = route.isProtected

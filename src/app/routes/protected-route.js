@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from "fusion-plugin-react-router";
 
-import { Loader } from "../../library";
-import { useAuth } from "../../library";
+import { Loader } from "../../library/common/components";
+import { useAuth } from "../../library/common/hooks";
 
 export function ProtectedRoute({ children }) {
   const location = useLocation();

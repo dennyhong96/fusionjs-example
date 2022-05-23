@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import { User, transformUser } from ".";
-import { transformDate } from "../../../library";
+import { transformDate } from "../../../library/utilities";
 
 const hashPassword = async (password) => {
   const passwordSalt = await bcrypt.genSalt(12);

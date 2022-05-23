@@ -1,0 +1,1 @@
+export { staticReducer } from "./static";

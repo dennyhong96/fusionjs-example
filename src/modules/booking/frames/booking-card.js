@@ -1,15 +1,14 @@
+import { Card, ConfirmationModal } from "../../../library/common/components";
 import {
-  Card,
-  ConfirmationModal,
   formatDate,
   formatTime,
   formatPrice,
   formatUsername,
-  useBooking,
-} from "../../../library";
+} from "../../../library/utilities";
+import { useCancelBooking } from "../../../services/booking";
 
 export function BookingCard({ booking }) {
-  const { cancelBooking } = useBooking();
+  const { cancelBooking } = useCancelBooking();
 
   const handleCancelEvent = async (bookingId) => {
     await cancelBooking({ bookingId });

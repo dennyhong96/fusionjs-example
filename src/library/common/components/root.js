@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from "react";
 import { Helmet } from "fusion-plugin-react-helmet-async";
 
-import { Router } from "../../../app";
+import { Router } from "../../../app/routes";
 import { ToastContiner } from ".";
 import { useAuth } from "../hooks";
 

@@ -22,70 +22,71 @@ npm install && npm run dev
 
 - src/main file: This is the Fusion.js entry file
 
-- src/app/ folder: This folder is for main configurations such as Redux Create Store, Axios Instance and Routes
+- src/app/ folder: This folder is for main configurations such as Redux Create Store, GraphQL client configuration, and Routes
+
   ```
   - src/app/
+    - graphql/
+      - links/
     - routes
-      - index.js
       - protected-route.js
       - public-route.js
       - router.config.js
     - store/
-      - index.js
-      - reducer.ts
-      - init.js
   ```
-- src/modules/ folder: This folder is for Modules/Features of our app, we can treat this as containers. Each module/feature will have all its related files in same folder. We may have some module related components which we will be placing inside frames folder and components which are used in more than one module we will keep in common/components to share across the application. Reason for keeping all related files in same folder to increase maintainability and searchability.
-  ```
-  - src/modules/
-  - dashboard/
-    - index.js
-    - styles.js
-    - actions.js
-    - constants.js
-    - reducer.js
-    - frames/
-      - header/
-        - index.js
-        - styles.js
-  ```
-- src/library/ folder: This folder will keep all our helpers and common files which will be shared across the application. We have 2 major folder in this common and utilities. If you want to create some api services you can keep it in api folder inside library folder.
+
+- src/library/ folder: This folder will keep all our helpers and common files which will be shared across the application.
 
   ```
   - src/library/
-  - common
-    - components
-      - Header
-        - index.jsx
-        - styles.scss
-      - Dropdown
-        - index.jsx
-        - styles.scss
-    - actions
-      - AuthActions.js
-    - constants
-      - StoreConstant.js
-      - ImagesConstants.js
-      - URLConstants.js
-    - reducers
-      - AuthReducer.js
-  - utilities
-    - Validators.js
-    - Storage.js
-  - api - (optional folder as per requirement create this)
-    - AuthApiService.js
+    - api/
+      - init.js (Set redux initial state on the server)
+      - resovlers.js (GraphQL resolvers)
+      - typeDefs.js (GraphQL typeDefs)
+    - common/
+      - components/
+      - constants/
+      - hooks/
+      - slices/
+    - utilities/
   ```
 
-- src/resources/ folder: This folder will be used to keep all our static resources such as images, styles (mixins, variable etc), seeds, fonts etc. In current starter pack fonts and seed folder is not created, you can add them as per your need.
+- src/modules/ folder: This folder is for Modules/Features of the app, we can treat this as containers. Each module/feature will have all its related files in same folder. We may have some module related components which we will be placing inside frames folder and components which are used in more than one module we will keep in common/components to share across the application. Reason for keeping all related files in same folder to increase maintainability and searchability. Files in one module should NOT ever import from another module
+
+  ```
+  - src/modules/
+    - booking/
+      - api/
+        - loader.js (Data loaders for the feature's GraphQL api)
+        - model.js (DB modal for the feature's GraphQL api)
+        - resovler.js (Resolvers for the feature's GraphQL api)
+        - typeDef.js (TypeDefs for the feature's GraphQL api)
+      - containers/
+        - booking.js (Feature's route level container component)
+      - frames/
+        - booking-card.js (Feature related children/reusable components)
+  ```
+
+- src/services/ folder: This folder Ccntains reusable code for interacting with an API, often in the form of hooks. Server-cache/server-state is managed with Apollo client. Inspired by RTK Query’s recommendation to keep the API definition in a central location. This is the only example of where we purposely break the local-first rule. I like to think of API definitions as their own modular feature.
+
+  ```
+  - src/services/
+    - graphql/
+      - mutations/
+      - queries/
+    - index.js (Contains the hooks that uses Apollo client to execute the mutations and queries)
+  ```
+
+- src/resources/ folder: This folder will be used to keep all our static resources such as images, styles (mixins, variable etc), seeds, fonts etc.
   ```
   - src/resources/
-  - images/
-    - logo.svg
-  - styles/
-    - variables.scss
-    - mixins.scss
-  - fonts/
-    - Roboto.ttf
-  - seed/
-    - country.json
+    - images/
+      - logo.svg
+    - styles/
+      - variables.scss
+      - mixins.scss
+    - fonts/
+      - Roboto.ttf
+    - seed/
+      - country.json
   ```

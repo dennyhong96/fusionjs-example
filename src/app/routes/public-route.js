@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "fusion-plugin-react-router";
 
-import { useAuth } from "../../library";
+import { useAuth } from "../../library/common/hooks";
 
 export function PublicRoute({ children }) {
   const { isLoggedIn } = useAuth();

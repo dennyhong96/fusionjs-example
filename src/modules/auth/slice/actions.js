@@ -1,7 +1,7 @@
 import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
 
-import { isJson } from "../../library";
+import { isJson } from "../../../library/utilities";
 
 export const LOGIN_USER = "LOGIN_USER";
 export const LOGOUT_USER = "LOGOUT_USER";

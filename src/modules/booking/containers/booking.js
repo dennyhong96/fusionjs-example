@@ -2,8 +2,8 @@ import { Fragment } from "react";
 import { styled } from "fusion-plugin-styletron-react";
 import { Helmet } from "fusion-plugin-react-helmet-async";
 
+import { useBookingsList } from "../../../services/booking";
 import { BookingCard } from "../frames";
-import { useBooking } from "../../../library";
 
 const BookingList = styled("ul", {
   display: "flex",
@@ -12,7 +12,7 @@ const BookingList = styled("ul", {
 });
 
 export function BookingContainer() {
-  const { bookings } = useBooking();
+  const { bookings } = useBookingsList();
 
   return (
     <Fragment>

@@ -1,4 +1,4 @@
-import { Container } from "../../../library";
+import { Container } from "../../../library/common/components";
 
 export function NotFound() {
   return (

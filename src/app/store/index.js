@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 
+import { staticReducer } from "../../library/common/slices";
 import { authReducer } from "../../modules/auth";
-import { staticReducer } from "../../library/common/reducers/static";
 
 export const rootReducer = combineReducers({
   auth: authReducer,

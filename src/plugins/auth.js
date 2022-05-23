@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import { parseCookie } from "../library";
+import { parseCookie } from "../library/utilities";
 
 // TODO: Where does plugins folder belong?
 export async function auth(ctx, next) {

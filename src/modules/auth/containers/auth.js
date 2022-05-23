@@ -2,7 +2,8 @@ import { Fragment, useRef, useState } from "react";
 import { Helmet } from "fusion-plugin-react-helmet-async";
 import { styled } from "styletron-react";
 
-import { Form, useSafeDispatch, useAuth } from "../../../library";
+import { Form } from "../../../library/common/components";
+import { useSafeDispatch, useAuth } from "../../../library/common/hooks";
 
 const FormContainer = styled("div", {
   width: "100%",

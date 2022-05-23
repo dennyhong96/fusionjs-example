@@ -1,35 +1,24 @@
 import { useCallback } from "react";
-import { useMutation } from "react-apollo";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  CREATE_USER,
-  LOGIN,
   loginUserAction,
   loginUserFromStorage,
   logoutUserAction,
-} from "../../../modules";
+} from "../../../modules/auth";
+import { useLoginUser, useRegisterUser } from "../../../services/auth";
 
-// TODO: Move to modules?
 export const useAuth = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
 
-  const [registerMutation] = useMutation(CREATE_USER);
-  const [loginMutation] = useMutation(LOGIN);
-
-  const register = useCallback(async ({ email, password }) => {
-    await registerMutation({ variables: { email, password } });
-  }, []);
+  const { register } = useRegisterUser();
+  const { login: loginMutation } = useLoginUser();
 
   const login = useCallback(
     async ({ email, password }) => {
-      const {
-        data: { login: credential },
-      } = await loginMutation({
-        variables: { email, password },
-      });
-      dispatch(loginUserAction(credential));
+      const credentials = await loginMutation({ email, password });
+      dispatch(loginUserAction(credentials));
     },
     [loginMutation]
   );

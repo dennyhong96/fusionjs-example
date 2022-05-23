@@ -1,15 +1,16 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { styled } from "fusion-plugin-styletron-react";
 
+import { Modal, Form, Loader, Map } from "../../../library/common/components";
 import {
-  Modal,
-  Form,
-  useEvent,
   useDebounceValue,
   useSafeDispatch,
-  Loader,
-  Map,
-} from "../../../library";
+} from "../../../library/common/hooks";
+import {
+  useCreateEvent,
+  useEventLocationList,
+  useSearchEventLocation,
+} from "../../../services/event";
 
 const Warpper = styled("div", {
   maxHeight: "min(75vh, 600px)",
@@ -79,9 +80,10 @@ export function CreateEventModal() {
     SEARCH_DEBOUNCE_DELAY
   );
 
-  const { createEvent, searchLocation, locations, locationLoading } = useEvent({
-    locationSearchQuery: debouncedLocationQuery,
-  });
+  const { createEvent } = useCreateEvent();
+  const { locations } = useEventLocationList();
+  const { searchLocation, locationLoading } = useSearchEventLocation();
+
   useEffect(() => {
     searchLocation();
   }, [debouncedLocationQuery]);

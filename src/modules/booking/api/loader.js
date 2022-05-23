@@ -1,7 +1,7 @@
 import { Booking } from ".";
 import { loadUser } from "../../auth/api";
 import { loadEvent } from "../../event/api";
-import { transformDate } from "../../../library";
+import { transformDate } from "../../../library/utilities";
 
 export async function loadBookings(eventId) {
   const bookings = await Booking.find({ event: eventId });

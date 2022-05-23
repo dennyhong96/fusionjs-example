@@ -1,20 +1,24 @@
 import { useCallback } from "react";
 import { useMutation, useQuery } from "react-apollo";
 
-import { CANCEL_BOOKING, CREATE_BOOKING, GET_BOOKINGS } from "../../../modules";
-import { useAuth, useApolloCache } from ".";
+import { useApolloCache, useAuth } from "../../library/common/hooks";
+import { CANCEL_BOOKING, CREATE_BOOKING, GET_BOOKINGS } from "./graphql";
 
-// TODO: Move to modules?
-export const useBooking = () => {
-  const { updateCache } = useApolloCache(GET_BOOKINGS);
+export const useBookingsList = () => {
   const { isLoggedIn } = useAuth();
 
   const { data } = useQuery(GET_BOOKINGS, {
     fetchPolicy: "cache-and-network",
     skip: !isLoggedIn,
   });
+
+  return { bookings: data?.bookings ?? [] };
+};
+
+export const useCreateBooking = () => {
+  const { updateCache } = useApolloCache(GET_BOOKINGS);
+
   const [createMutation] = useMutation(CREATE_BOOKING);
-  const [cancelMutation] = useMutation(CANCEL_BOOKING);
 
   const createBooking = useCallback(
     async ({ eventId }) => {
@@ -28,6 +32,13 @@ export const useBooking = () => {
     [createMutation, updateCache]
   );
 
+  return { createBooking };
+};
+
+export const useCancelBooking = () => {
+  const { updateCache } = useApolloCache(GET_BOOKINGS);
+  const [cancelMutation] = useMutation(CANCEL_BOOKING);
+
   const cancelBooking = useCallback(
     async ({ bookingId }) => {
       await cancelMutation({
@@ -38,9 +49,5 @@ export const useBooking = () => {
     [cancelMutation, updateCache]
   );
 
-  return {
-    bookings: data?.bookings ?? [],
-    createBooking,
-    cancelBooking,
-  };
+  return { cancelBooking };
 };

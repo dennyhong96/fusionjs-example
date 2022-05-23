@@ -3,8 +3,10 @@ import { assetUrl } from "fusion-core";
 import { styled } from "fusion-plugin-styletron-react";
 import { Helmet } from "fusion-plugin-react-helmet-async";
 
-import { Card, useEvent, useAuth } from "../../../library";
+import { useAuth } from "../../../library/common/hooks";
+import { Card } from "../../../library/common/components";
 import { CreateEventModal, EventCard, EventDetailsModal } from "../frames";
+import { useEventList } from "../../../services/event";
 
 const PageWrapper = styled("div", {
   display: "flex",
@@ -19,7 +21,7 @@ const EventList = styled("ul", {
 });
 
 export function EventContainer() {
-  const { events } = useEvent();
+  const { events } = useEventList();
   const { isLoggedIn } = useAuth();
 
   return (

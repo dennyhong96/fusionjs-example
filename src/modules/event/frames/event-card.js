@@ -1,12 +1,12 @@
 import { useSearchParams } from "fusion-plugin-react-router";
 
+import { Card } from "../../../library/common/components";
 import {
-  Card,
   formatDate,
   formatTime,
   formatPrice,
   formatUsername,
-} from "../../../library";
+} from "../../../library/utilities";
 
 export function EventCard({ event }) {
   const [, setSearchParams] = useSearchParams();

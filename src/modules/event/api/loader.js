@@ -3,7 +3,7 @@ import DataLoader from "dataloader";
 import { Event } from ".";
 import { loadUser } from "../../auth/api";
 import { loadBookings } from "../../booking/api";
-import { transformDate } from "../../../library";
+import { transformDate } from "../../../library/utilities";
 
 // Dataloaders for batching DB calls
 export const eventLoader = new DataLoader(loadEvents);

@@ -3,18 +3,17 @@ import { styled } from "fusion-plugin-styletron-react";
 import { useSearchParams } from "fusion-plugin-react-router";
 import { Helmet } from "fusion-plugin-react-helmet-async";
 
+import { Modal, Map } from "../../../library/common/components";
+import { useSafeDispatch, useAuth } from "../../../library/common/hooks";
 import {
-  Modal,
   formatDate,
   formatPrice,
   formatTime,
   formatUsername,
-  useSafeDispatch,
-  useBooking,
-  useEvent,
-  useAuth,
-  Map,
-} from "../../../library";
+} from "../../../library/utilities";
+
+import { useCreateBooking } from "../../../services/booking";
+import { useEventList } from "../../../services/event";
 
 const Details = styled("div", {
   width: "100%",
@@ -48,8 +47,8 @@ const Actions = styled("div", {
 });
 
 export function EventDetailsModal() {
-  const { events } = useEvent();
-  const { createBooking } = useBooking();
+  const { events } = useEventList();
+  const { createBooking } = useCreateBooking();
   const { user, isLoggedIn } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const [event, unsafeSetEvent] = useState(null);

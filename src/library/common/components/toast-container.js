@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { styled } from "styletron-react";
 
 import { Toast } from ".";
-import { apolloErrorEmitter } from "../../../app";
+import { apolloErrorEmitter } from "../../../app/graphql";
 import { randomId } from "../../utilities";
 
 const Wrapper = styled("ul", {
