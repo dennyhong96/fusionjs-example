@@ -81,8 +81,12 @@ export function CreateEventModal() {
   );
 
   const { createEvent } = useCreateEvent();
-  const { locations } = useEventLocationList();
-  const { searchLocation, locationLoading } = useSearchEventLocation();
+  const { locations } = useEventLocationList({
+    locationSearchQuery: debouncedLocationQuery,
+  });
+  const { searchLocation, locationLoading } = useSearchEventLocation({
+    locationSearchQuery: debouncedLocationQuery,
+  });
 
   useEffect(() => {
     searchLocation();

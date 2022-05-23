@@ -48,6 +48,7 @@ npm install && npm run dev
       - constants/
       - hooks/
       - slices/
+    - plugins/ (Contains Fusion.js plugins)
     - utilities/
   ```
 
@@ -67,7 +68,7 @@ npm install && npm run dev
         - booking-card.js (Feature related children/reusable components)
   ```
 
-- src/services/ folder: This folder Ccntains reusable code for interacting with an API, often in the form of hooks. Server-cache/server-state is managed with Apollo client. Inspired by RTK Query’s recommendation to keep the API definition in a central location. This is the only example of where we purposely break the local-first rule. I like to think of API definitions as their own modular feature.
+- src/services/ folder: This folder Ccntains reusable code for interacting with an API, often in the form of hooks. Server-cache/server-state is managed with Apollo client. Inspired by [RTK Query’s recommendation](https://redux-toolkit.js.org/tutorials/rtk-query) to keep the API definition in a central location. This is the only example of where we purposely break the local-first rule. I like to think of API definitions as their own modular feature.
 
   ```
   - src/services/

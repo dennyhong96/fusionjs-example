@@ -2,7 +2,6 @@ import { split } from "fusion-react";
 
 import { Error, Loader } from "../../library/common/components";
 
-// TODO: split into individual modules
 export const routes = [
   {
     component: split({

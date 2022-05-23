@@ -5,7 +5,7 @@ import {
   loginUserAction,
   loginUserFromStorage,
   logoutUserAction,
-} from "../../../modules/auth";
+} from "../../../modules/auth/slice";
 import { useLoginUser, useRegisterUser } from "../../../services/auth";
 
 export const useAuth = () => {

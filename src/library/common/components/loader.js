@@ -73,3 +73,5 @@ export function Loader({ fullWidth = false, size = "md" } = {}) {
     </Wrapper>
   );
 }
+
+export default Loader;

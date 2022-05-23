@@ -18,3 +18,5 @@ export function Error() {
     </Wrapper>
   );
 }
+
+export default Error;
