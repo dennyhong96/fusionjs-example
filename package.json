@@ -2,7 +2,7 @@
   "name": "fusion-example",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/main.js",
   "scripts": {
     "dev": "fusion dev",
     "build:dev": "fusion build",
@@ -16,6 +16,7 @@
   "dependencies": {
     "apollo-link-context": "^1.0.20",
     "apollo-link-error": "^1.1.13",
+    "baseui": "^11.0.3",
     "bcryptjs": "^2.4.3",
     "dataloader": "^2.1.0",
     "dotenv": "^16.0.1",
@@ -42,6 +43,7 @@
     "react": "^16.14.0",
     "react-apollo": "^3.1.5",
     "react-dom": "^16.14.0",
-    "react-map-gl": "^7.0.12"
+    "react-map-gl": "^7.0.12",
+    "styletron-engine-atomic": "^1.4.8"
   }
 }

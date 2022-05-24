@@ -4,6 +4,7 @@ import { Helmet } from "fusion-plugin-react-helmet-async";
 import { Router } from "../../../app/routes";
 import { ToastContiner } from ".";
 import { useAuth } from "../hooks";
+import { MyCard } from "./my-card";
 
 export const Root = () => {
   const { silentLogin } = useAuth();
@@ -115,6 +116,7 @@ export const Root = () => {
       </Helmet>
       <Router />
       <ToastContiner />
+      {/* <MyCard /> */}
     </Fragment>
   );
 };

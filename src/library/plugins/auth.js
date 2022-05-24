@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 
 import { parseCookie } from "../utilities";
 
-// TODO: Where does plugins folder belong?
 export async function auth(ctx, next) {
   const req = ctx.request;
   const cookies = parseCookie(req.header.cookie);

@@ -1,5 +1,9 @@
 import { Booking, transformBooking } from ".";
 import { Event, transformEvent } from "../../event/api";
+
+// TODO: Resolvers need to import DB Models across modules
+// need to determine whether these belong to module folder,
+// or standalone server/api folder
 import { User } from "../../auth/api";
 
 // Resolvers
