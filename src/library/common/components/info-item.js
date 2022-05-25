@@ -7,7 +7,7 @@ export const InfoItem = ({ title, titleWidth = "auto", children }) => {
       <FlexGridItem
         overrides={{
           Block: {
-            style: { width: titleWidth, flexGrow: 0 },
+            style: { width: titleWidth, flexGrow: "0" },
           },
         }}
       >

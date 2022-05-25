@@ -23,7 +23,6 @@ export function AuthContainer() {
     const email = emailRef.current?.value?.trim() ?? "";
     const password = passwordRef.current?.value?.trim() ?? "";
 
-    console.log({ emailRef, passwordRef });
     if (!email || !password) return;
     if (isRegisterMode) {
       await register({ email, password });
@@ -40,7 +39,8 @@ export function AuthContainer() {
         className={css({
           width: "100%",
           maxWidth: "400px",
-          margin: "auto",
+          marginLeft: "auto",
+          marginRight: "auto",
         })}
         onSubmit={handleSubmit}
       >

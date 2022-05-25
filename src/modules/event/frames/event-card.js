@@ -41,7 +41,7 @@ export function EventCard({ event }) {
             display="flex"
             flexDirection="column"
             overrides={{
-              Block: { style: { width: "20%", flexGrow: 0 } },
+              Block: { style: { width: "20%", flexGrow: "0" } },
             }}
             gridGap="scale100"
           >

@@ -43,7 +43,7 @@ export function BookingCard({ booking }) {
             display="flex"
             flexDirection="column"
             overrides={{
-              Block: { style: { width: "30%", flexGrow: 0 } },
+              Block: { style: { width: "30%", flexGrow: "0" } },
             }}
             gridGap="scale100"
           >

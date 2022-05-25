@@ -1,18 +1,16 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Button } from "baseui/button";
+import { useStyletron } from "baseui";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Textarea } from "baseui/textarea";
 import { DatePicker } from "baseui/datepicker";
-import { StatefulMenu } from "baseui/menu";
 import { ListItemLabel, MenuAdapter } from "baseui/list";
-import { Spinner, SIZE } from "baseui/spinner";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import { ParagraphMedium } from "baseui/typography";
 import { Heading, HeadingLevel } from "baseui/heading";
-import Delete from "baseui/icon/delete";
 
-import { Modal, Map } from "../../../library/common/components";
+import { Modal, Map, Typeahead } from "../../../library/common/components";
 import {
   useDebounceValue,
   useSafeDispatch,
@@ -22,7 +20,6 @@ import {
   useEventLocationList,
   useSearchEventLocation,
 } from "../../../services/event";
-import { useStyletron } from "baseui";
 
 const SEARCH_DEBOUNCE_DELAY = 300;
 
@@ -65,7 +62,7 @@ export function CreateEventModal() {
     const title = titleRef.current?.value?.trim() ?? "";
     const description = descRef.current?.value;
     const price = Number(priceRef.current?.value?.trim());
-    console.log({ title, description, price, dateTime, selectedLocation });
+
     if (
       !title ||
       !description ||
@@ -73,6 +70,13 @@ export function CreateEventModal() {
       !dateTime ||
       !selectedLocation
     ) {
+      console.error({
+        title,
+        description,
+        "isFinite(price)": isFinite(price),
+        dateTime,
+        selectedLocation,
+      });
       return;
     }
 
@@ -90,7 +94,6 @@ export function CreateEventModal() {
     closeCreateEventModal();
   };
 
-  // TODO: Refactor JSX, extract typeahead component
   return (
     <Modal
       ref={createEventModal}
@@ -116,7 +119,9 @@ export function CreateEventModal() {
           >
             Cancel
           </Button>
-          <Button type="submit">Confirm</Button>
+          <Button type="button" onClick={handleCreateEvent}>
+            Confirm
+          </Button>
         </Fragment>
       }
     >
@@ -126,7 +131,7 @@ export function CreateEventModal() {
           overflow: "auto",
         })}
       >
-        <form onSubmit={handleCreateEvent}>
+        <form onSubmit={(e) => e.preventDefault()}>
           <FormControl label="Title" caption="Required">
             <Input id="create-event-email" inputRef={titleRef} type="text" />
           </FormControl>
@@ -160,15 +165,7 @@ export function CreateEventModal() {
                     alignItems="center"
                     paddingTop="1rem"
                   >
-                    <FlexGridItem
-                      overrides={{
-                        Block: {
-                          style: {
-                            flex: "1",
-                          },
-                        },
-                      }}
-                    >
+                    <FlexGridItem>
                       <ParagraphMedium>
                         {selectedLocation.address}
                       </ParagraphMedium>
@@ -177,7 +174,7 @@ export function CreateEventModal() {
                       overrides={{
                         Block: {
                           style: {
-                            flex: "0",
+                            flexGrow: "0",
                             width: "max-content",
                           },
                         },
@@ -193,62 +190,31 @@ export function CreateEventModal() {
                   </FlexGrid>
                 </Fragment>
               ) : (
-                <Input
+                <Typeahead
                   id="create-event-address"
-                  type="text"
-                  value={locationQuery}
-                  onChange={(e) => setLocationQuery(e.target.value)}
-                  endEnhancer={
-                    <Fragment>
-                      {locationLoading ? (
-                        <Spinner $color="#000" $size={SIZE.small} />
-                      ) : (
-                        <Button
-                          size="compact"
-                          onClick={() => {
-                            setLocationQuery("");
-                          }}
-                          kind="secondary"
-                        >
-                          <Delete />
-                        </Button>
-                      )}
-                    </Fragment>
-                  }
-                />
-              )}
-              {locations.length > 0 && (
-                <StatefulMenu
+                  isLoading={locationLoading}
+                  query={locationQuery}
+                  onQueryChange={(e) => setLocationQuery(e.target.value)}
+                  onClearQuery={() => setLocationQuery("")}
                   items={locations}
-                  onItemSelect={({ item: location }) => {
+                  onItemSelect={(location) => {
                     setSelectedLocation(location);
                     setLocationQuery("");
                   }}
-                  overrides={{
-                    List: {
-                      style: {
-                        height: "250px",
-                        width: "90%",
-                        margin: "auto",
-                      },
-                    },
-                    Option: {
-                      props: {
-                        overrides: {
-                          ListItem: {
-                            component: React.forwardRef((props, ref) => (
-                              <MenuAdapter {...props} ref={ref}>
-                                <ListItemLabel
-                                  description={`Lat: ${props.item.coordinates.latitude}, Lng: ${props.item.coordinates.longitude}`}
-                                >
-                                  {props.item.address}
-                                </ListItemLabel>
-                              </MenuAdapter>
-                            )),
-                          },
-                        },
-                      },
-                    },
+                  renderListItem={(props, ref) => (
+                    <MenuAdapter {...props} ref={ref}>
+                      <ListItemLabel
+                        description={`Lat: ${props.item.coordinates.latitude}, Lng: ${props.item.coordinates.longitude}`}
+                      >
+                        {props.item.address}
+                      </ListItemLabel>
+                    </MenuAdapter>
+                  )}
+                  listStyles={{
+                    height: "250px",
+                    width: "90%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
                   }}
                 />
               )}

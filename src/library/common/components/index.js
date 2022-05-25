@@ -8,3 +8,4 @@ export * from "./root";
 export * from "./toast-container";
 export * from "./toast";
 export * from "./error";
+export * from "./typeahead";

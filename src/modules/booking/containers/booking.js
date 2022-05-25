@@ -4,6 +4,7 @@ import { Helmet } from "fusion-plugin-react-helmet-async";
 
 import { useBookingsList } from "../../../services/booking";
 import { BookingCard } from "../frames";
+import { ParagraphMedium } from "baseui/typography";
 
 export function BookingContainer() {
   const [css] = useStyletron();
@@ -15,7 +16,7 @@ export function BookingContainer() {
         <title>My bookings | EasyEvents</title>
       </Helmet>
       {bookings.length === 0 ? (
-        <p>You have no bookings</p>
+        <ParagraphMedium>You have no bookings</ParagraphMedium>
       ) : (
         <ul
           className={css({

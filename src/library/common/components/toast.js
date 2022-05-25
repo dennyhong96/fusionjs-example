@@ -55,7 +55,7 @@ export function Toast({ title, children, onClose }) {
               Block: {
                 style: {
                   width: "max-content",
-                  flexGrow: 0,
+                  flexGrow: "0",
                 },
               },
             }}
