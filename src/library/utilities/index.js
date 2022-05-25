@@ -1,3 +1,5 @@
+import UniversalEmitter from "fusion-plugin-universal-events/dist-browser-cjs/emitter";
+
 export function randomId(prefix = "") {
   return prefix + "_" + Math.random().toString(36).substr(2, 9);
 }
@@ -160,3 +162,13 @@ export const parseCookie = (cookie) => {
       };
     }, {});
 };
+
+export const getEmitter = () => {
+  // Make sure we are always using the same emitter instance
+  if (!getEmitter.instance) {
+    getEmitter.instance = new UniversalEmitter();
+  }
+  return getEmitter.instance;
+};
+getEmitter.types = {};
+getEmitter.types.APOLLO_ERROR = "APOLLO_ERROR";

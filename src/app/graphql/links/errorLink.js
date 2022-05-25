@@ -1,8 +1,6 @@
 import { onError } from "apollo-link-error";
-import UniversalEmitter from "fusion-plugin-universal-events/dist-browser-cjs/emitter";
 
-// TODO: refactor into service?
-export const apolloErrorEmitter = new UniversalEmitter();
+import { getEmitter } from "../../../library/utilities";
 
 export const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -14,7 +12,7 @@ export const errorLink = onError(({ graphQLErrors, networkError }) => {
           2
         )}"`
       );
-      apolloErrorEmitter.handleEvent("APOLLO_ERROR", message);
+      getEmitter().handleEvent(getEmitter.types.APOLLO_ERROR, message);
     });
 
     const unAuth =

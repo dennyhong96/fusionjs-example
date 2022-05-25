@@ -1,9 +1,9 @@
 import { useStyletron } from "baseui";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Toast } from ".";
-import { apolloErrorEmitter } from "../../../app/graphql";
+import { getEmitter } from "../../utilities";
 import { closeAlertAction, createAlertAction } from "../slices/alert";
 
 export function ToastContiner({ duration = 2500 }) {
@@ -13,7 +13,7 @@ export function ToastContiner({ duration = 2500 }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    apolloErrorEmitter.on("APOLLO_ERROR", (errMessage) => {
+    getEmitter().on(getEmitter.types.APOLLO_ERROR, (errMessage) => {
       const {
         payload: { id },
       } = dispatch(
