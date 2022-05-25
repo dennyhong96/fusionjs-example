@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { styled } from "fusion-plugin-styletron-react";
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
@@ -23,22 +22,15 @@ import {
   useEventLocationList,
   useSearchEventLocation,
 } from "../../../services/event";
-
-const Warpper = styled("div", {
-  maxHeight: "min(75vh, 600px)",
-  overflow: "auto",
-});
-
-const Actions = styled("div", {
-  display: "flex",
-  justifyContent: "center",
-  gap: "2rem",
-});
+import { useStyletron } from "baseui";
 
 const SEARCH_DEBOUNCE_DELAY = 300;
 
 export function CreateEventModal() {
-  const [dateTime, setDateTime] = useState(new Date());
+  const [css] = useStyletron();
+
+  const [dateTime, unsafeSetDateTime] = useState(new Date());
+  const setDateTime = useSafeDispatch(unsafeSetDateTime);
 
   const [locationQuery, unsafeSetLocationQuery] = useState("");
   const setLocationQuery = useSafeDispatch(unsafeSetLocationQuery);
@@ -59,7 +51,8 @@ export function CreateEventModal() {
     searchLocation();
   }, [debouncedLocationQuery]);
 
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedLocation, unsafeSetSelectedLocation] = useState(null);
+  const setSelectedLocation = useSafeDispatch(unsafeSetSelectedLocation);
 
   const titleRef = useRef(null);
   const descRef = useRef(null);
@@ -100,15 +93,40 @@ export function CreateEventModal() {
   // TODO: Refactor JSX, extract typeahead component
   return (
     <Modal
-      $maxWidth="600px"
       ref={createEventModal}
       trigger={<Button>Create an event</Button>}
+      renderHeader={
+        <HeadingLevel>
+          <Heading $as="h4">Create your event</Heading>
+        </HeadingLevel>
+      }
+      renderActions={
+        <Fragment>
+          <Button
+            onClick={closeCreateEventModal}
+            type="button"
+            kind="secondary"
+            overrides={{
+              Root: {
+                style: {
+                  marginRight: "1rem",
+                },
+              },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button type="submit">Confirm</Button>
+        </Fragment>
+      }
     >
-      <Warpper>
+      <div
+        className={css({
+          maxHeight: "min(60vh, 600px)",
+          overflow: "auto",
+        })}
+      >
         <form onSubmit={handleCreateEvent}>
-          <HeadingLevel>
-            <Heading $as="h4">Create your event</Heading>
-          </HeadingLevel>
           <FormControl label="Title" caption="Required">
             <Input id="create-event-email" inputRef={titleRef} type="text" />
           </FormControl>
@@ -236,18 +254,8 @@ export function CreateEventModal() {
               )}
             </Fragment>
           </FormControl>
-          <Actions>
-            <Button
-              onClick={closeCreateEventModal}
-              type="button"
-              kind="secondary"
-            >
-              Cancel
-            </Button>
-            <Button type="submit">Confirm</Button>
-          </Actions>
         </form>
-      </Warpper>
+      </div>
     </Modal>
   );
 }

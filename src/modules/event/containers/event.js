@@ -1,27 +1,15 @@
 import { Fragment } from "react";
-import { assetUrl } from "fusion-core";
-import { styled } from "fusion-plugin-styletron-react";
 import { Helmet } from "fusion-plugin-react-helmet-async";
-import { Card, StyledBody, StyledAction } from "baseui/card";
+import { Card, StyledBody } from "baseui/card";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 
 import { useAuth } from "../../../library/common/hooks";
 import { CreateEventModal, EventCard, EventDetailsModal } from "../frames";
 import { useEventList } from "../../../services/event";
-
-const PageWrapper = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  gap: "1rem",
-});
-
-const EventList = styled("ul", {
-  display: "flex",
-  flexDirection: "column",
-  gap: "1rem",
-});
+import { useStyletron } from "baseui";
 
 export function EventContainer() {
+  const [css] = useStyletron();
   const { events } = useEventList();
   const { isLoggedIn } = useAuth();
 
@@ -30,7 +18,13 @@ export function EventContainer() {
       <Helmet>
         <title>Events | EasyEvents</title>
       </Helmet>
-      <PageWrapper>
+      <div
+        className={css({
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+        })}
+      >
         {isLoggedIn && (
           <Card>
             <StyledBody>
@@ -47,15 +41,21 @@ export function EventContainer() {
             </StyledBody>
           </Card>
         )}
-        <EventList>
+        <ul
+          className={css({
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+          })}
+        >
           {events.length === 0 && <p>No events listed</p>}
           {events.map((event) => (
             <li key={event._id}>
               <EventCard event={event} />
             </li>
           ))}
-        </EventList>
-      </PageWrapper>
+        </ul>
+      </div>
       <EventDetailsModal />
       {/* <img src={assetUrl("../static/images/logo.png")} /> */}
     </Fragment>

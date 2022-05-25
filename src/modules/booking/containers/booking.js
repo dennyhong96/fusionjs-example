@@ -1,17 +1,12 @@
 import { Fragment } from "react";
-import { styled } from "fusion-plugin-styletron-react";
+import { useStyletron } from "baseui";
 import { Helmet } from "fusion-plugin-react-helmet-async";
 
 import { useBookingsList } from "../../../services/booking";
 import { BookingCard } from "../frames";
 
-const BookingList = styled("ul", {
-  display: "flex",
-  flexDirection: "column",
-  gap: "1rem",
-});
-
 export function BookingContainer() {
+  const [css] = useStyletron();
   const { bookings } = useBookingsList();
 
   return (
@@ -22,13 +17,19 @@ export function BookingContainer() {
       {bookings.length === 0 ? (
         <p>You have no bookings</p>
       ) : (
-        <BookingList>
+        <ul
+          className={css({
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+          })}
+        >
           {bookings.map((booking) => (
             <li key={booking._id}>
               <BookingCard booking={booking} />
             </li>
           ))}
-        </BookingList>
+        </ul>
       )}
     </Fragment>
   );

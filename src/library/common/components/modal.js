@@ -1,4 +1,3 @@
-import { styled } from "fusion-plugin-styletron-react";
 import {
   cloneElement,
   Fragment,
@@ -9,65 +8,18 @@ import {
   useImperativeHandle,
   forwardRef,
 } from "react";
+import {
+  Modal as _Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalButton,
+  SIZE,
+  ROLE,
+} from "baseui/modal";
+// import { KIND as ButtonKind } from "baseui/button";
 
 import { useSafeDispatch } from "../hooks";
-
-const FOCUSABLE_EL_SELECTORS =
-  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled]), details:not([disabled]), summary:not(:disabled)';
-
-const Wrapper = styled("div", {
-  position: "fixed",
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  isolation: "isolate",
-});
-
-const Backdrop = styled("div", {
-  position: "absolute",
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  background: "rgba(0, 0, 0, 0.2)",
-});
-
-const ContentWrapper = styled("div", ({ $maxWidth }) => ({
-  position: "absolute",
-  left: "50%",
-  top: "50%",
-  transform: "translate(-50%, -50%)",
-  zIndex: 1,
-  padding: "2rem",
-  width: "100%",
-  maxWidth: $maxWidth,
-}));
-
-const Content = styled("div", {
-  position: "relative",
-  background: "rgba(255, 255, 255, 1)",
-  padding: "2rem",
-  ":focus": {
-    outline: "2px solid -webkit-focus-ring-color",
-  },
-  width: "100%",
-});
-
-const Close = styled("button", {
-  position: "absolute",
-  right: "0.5rem",
-  top: "0.5rem",
-  height: "36px",
-  width: "36px",
-  display: "grid",
-  placeContent: "center",
-});
-
-const CloseIcon = styled("svg", {
-  height: "24px",
-  width: "24px",
-});
 
 export const Modal = forwardRef(
   (
@@ -79,7 +31,8 @@ export const Modal = forwardRef(
       trigger,
       returnFocusRef,
       children,
-      $maxWidth = "600px",
+      renderHeader = null,
+      renderActions = null,
     },
     handleRef
   ) => {
@@ -103,10 +56,7 @@ export const Modal = forwardRef(
 
     // effect
     useEffect(() => {
-      if (!prevOpenRef.current && open) {
-        // changed from close to open
-        modalRef.current.focus();
-      } else if (prevOpenRef.current && !open) {
+      if (prevOpenRef.current && !open) {
         // changed from open to close
         triggerRef.current?.focus();
         returnFocusRef?.current?.focus();
@@ -136,67 +86,26 @@ export const Modal = forwardRef(
       });
     }
 
-    const handleTrapFocus = (evt) => {
-      const target = evt.target;
-      const focusables = [
-        ...modalRef.current.querySelectorAll(FOCUSABLE_EL_SELECTORS),
-      ];
-      const firstFocusable = focusables[0];
-      const lastFocusable = focusables[focusables.length - 1];
-      if (target === firstFocusable || !focusables.includes(target)) {
-        if (evt.key === "Tab" && evt.shiftKey) {
-          evt.preventDefault();
-          lastFocusable.focus();
-        }
-      } else if (target === lastFocusable || !focusables.includes(target)) {
-        if (evt.key === "Tab" && !evt.shiftKey) {
-          evt.preventDefault();
-          firstFocusable.focus();
-        }
-      }
-    };
-
-    const handleKeyDown = (evt) => {
-      if (evt.key === "Escape") {
-        evt.preventDefault();
-        handleClose();
-        return;
-      }
-      handleTrapFocus(evt);
-    };
-
     return (
       <Fragment>
         {trigger && isValidElement(trigger) && trigger}
-        {open && (
-          <Wrapper>
-            <Backdrop onClick={handleClose} />
-            <ContentWrapper $maxWidth={$maxWidth}>
-              <Content
-                aria-modal="true"
-                role="dialog"
-                ref={modalRef}
-                tabIndex={-1}
-                onKeyDown={handleKeyDown}
-              >
-                <Close onClick={handleClose}>
-                  <CloseIcon
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </CloseIcon>
-                </Close>
-                {children}
-              </Content>
-            </ContentWrapper>
-          </Wrapper>
-        )}
+        <_Modal
+          onClose={handleClose}
+          closeable
+          isOpen={open}
+          animate
+          autoFocus
+          size={SIZE.default}
+          role={ROLE.dialog}
+        >
+          <ModalHeader>{renderHeader}</ModalHeader>
+          <ModalBody>{children}</ModalBody>
+          <ModalFooter>
+            {/* <ModalButton kind={ButtonKind.tertiary}>Cancel</ModalButton>
+            <ModalButton>Okay</ModalButton> */}
+            {renderActions}
+          </ModalFooter>
+        </_Modal>
       </Fragment>
     );
   }

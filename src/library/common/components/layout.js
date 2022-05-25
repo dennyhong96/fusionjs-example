@@ -12,6 +12,7 @@ import { Heading, HeadingLevel } from "baseui/heading";
 import { useAuth } from "../hooks";
 import { Container } from "./container";
 import { useStyletron } from "baseui";
+import { ParagraphMedium } from "baseui/typography";
 
 export function Layout({ children }) {
   const [css] = useStyletron();
@@ -92,7 +93,6 @@ export function Layout({ children }) {
       <footer
         className={css({
           background: "#000",
-          color: "#fff",
           paddingTop: "3rem",
           paddingBottom: "3rem",
         })}
@@ -104,7 +104,9 @@ export function Layout({ children }) {
               justifyContent: "center",
             })}
           >
-            EasyEvents | {new Date().getFullYear()}
+            <ParagraphMedium color="#fff">
+              EasyEvents | {new Date().getFullYear()}
+            </ParagraphMedium>
           </div>
         </Container>
       </footer>
