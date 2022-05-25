@@ -18,7 +18,6 @@ import {
 import { useCreateBooking } from "../../../services/booking";
 import { useEventList } from "../../../services/event";
 
-// TODO: base ui: Remove unused common components
 // TODO: base ui: Implement Modal with base ui
 // TODO: base ui: Clean up all styled components(not common) with css()
 
@@ -144,6 +143,7 @@ export function EventDetailsModal() {
               {event.address}
             </InfoItem>
             <Map
+              address={event.address}
               longitude={event.coordinates.longitude}
               latitude={event.coordinates.latitude}
             />

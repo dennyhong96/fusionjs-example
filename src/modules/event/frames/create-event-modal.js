@@ -13,7 +13,7 @@ import { ParagraphMedium } from "baseui/typography";
 import { Heading, HeadingLevel } from "baseui/heading";
 import Delete from "baseui/icon/delete";
 
-import { Modal, Form, Map } from "../../../library/common/components";
+import { Modal, Map } from "../../../library/common/components";
 import {
   useDebounceValue,
   useSafeDispatch,
@@ -105,7 +105,7 @@ export function CreateEventModal() {
       trigger={<Button>Create an event</Button>}
     >
       <Warpper>
-        <Form onSubmit={handleCreateEvent}>
+        <form onSubmit={handleCreateEvent}>
           <HeadingLevel>
             <Heading $as="h4">Create your event</Heading>
           </HeadingLevel>
@@ -133,6 +133,7 @@ export function CreateEventModal() {
               {selectedLocation ? (
                 <Fragment>
                   <Map
+                    address={selectedLocation.address}
                     longitude={selectedLocation.coordinates.longitude}
                     latitude={selectedLocation.coordinates.latitude}
                   />
@@ -245,7 +246,7 @@ export function CreateEventModal() {
             </Button>
             <Button type="submit">Confirm</Button>
           </Actions>
-        </Form>
+        </form>
       </Warpper>
     </Modal>
   );

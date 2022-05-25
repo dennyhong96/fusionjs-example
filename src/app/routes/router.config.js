@@ -1,12 +1,13 @@
+import { Spinner } from "baseui/spinner";
 import { split } from "fusion-react";
 
-import { Error, Loader } from "../../library/common/components";
+import { Error } from "../../library/common/components";
 
 export const routes = [
   {
     component: split({
       load: () => import("../../modules/event/containers/event"),
-      LoadingComponent: () => <Loader />,
+      LoadingComponent: () => <Spinner $size="medium" $color="#000" />,
       ErrorComponent: () => <Error />,
     }),
     name: "home",
@@ -17,7 +18,7 @@ export const routes = [
   {
     component: split({
       load: () => import("../../modules/auth/containers/auth"),
-      LoadingComponent: () => <Loader />,
+      LoadingComponent: () => <Spinner $size="medium" $color="#000" />,
       ErrorComponent: () => <Error />,
     }),
     name: "authenticate",
@@ -29,7 +30,7 @@ export const routes = [
   {
     component: split({
       load: () => import("../../modules/booking/containers/booking"),
-      LoadingComponent: () => <Loader />,
+      LoadingComponent: () => <Spinner $size="medium" $color="#000" />,
       ErrorComponent: () => <Error />,
     }),
     name: "bookings",
@@ -41,7 +42,7 @@ export const routes = [
   {
     component: split({
       load: () => import("../../modules/not-found/containers/not-found"),
-      LoadingComponent: () => <Loader />,
+      LoadingComponent: () => <Spinner $size="medium" $color="#000" />,
       ErrorComponent: () => <Error />,
     }),
     name: "notFound",

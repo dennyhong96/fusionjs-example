@@ -30,7 +30,6 @@ import { Root } from "./library/common/components";
 import { errorLink } from "./app/graphql";
 import { rootReducer } from "./app/store";
 
-// TODO: Group code by __NODE__ / __BROWSER__ ?
 export default async function start() {
   __NODE__ && (await import("dotenv")).config();
 

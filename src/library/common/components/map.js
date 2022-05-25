@@ -1,9 +1,10 @@
 import React from "react";
 import MapBox, { Marker } from "react-map-gl";
+import { FixedMarker } from "baseui/map-marker";
 
 import { useStatic } from "../hooks";
 
-export const Map = ({ latitude, longitude, zoom = 14 }) => {
+export const Map = ({ latitude, longitude, address, zoom = 14 }) => {
   const {
     keys: { mapBox: token },
   } = useStatic();
@@ -19,7 +20,13 @@ export const Map = ({ latitude, longitude, zoom = 14 }) => {
       mapStyle="mapbox://styles/mapbox/streets-v9"
       mapboxAccessToken={token}
     >
-      <Marker longitude={longitude} latitude={latitude} color="red" />
+      <Marker longitude={longitude} latitude={latitude}>
+        <FixedMarker
+          size="small"
+          label="Event Location"
+          labelEnhancerContent={address}
+        />
+      </Marker>
     </MapBox>
   );
 };

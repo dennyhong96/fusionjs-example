@@ -1,50 +1,54 @@
+import { useStyletron } from "baseui";
 import { useEffect, useState } from "react";
-import { styled } from "styletron-react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Toast } from ".";
 import { apolloErrorEmitter } from "../../../app/graphql";
-import { randomId } from "../../utilities";
+import { closeAlertAction, createAlertAction } from "../slices/alert";
 
-const Wrapper = styled("ul", {
-  position: "fixed",
-  bottom: "1rem",
-  right: "1rem",
-  display: "flex",
-  flexDirection: "column",
-  gap: "1rem",
-});
+export function ToastContiner({ duration = 2500 }) {
+  const [css] = useStyletron();
 
-export function ToastContiner({ duration = 5000 }) {
-  // TODO: Switch to shared redux state
-  const [toasts, setToasts] = useState([]);
+  const alerts = useSelector((state) => state.alert.alerts);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     apolloErrorEmitter.on("APOLLO_ERROR", (errMessage) => {
-      const id = randomId("toast");
-      setToasts((prev) => [
-        ...prev,
-        {
-          id,
+      const {
+        payload: { id },
+      } = dispatch(
+        createAlertAction({
           title: "Something went wrong",
-          text: errMessage,
-          onClose: () => setToasts((prev) => prev.filter((t) => t.id !== id)),
-        },
-      ]);
+          message: errMessage,
+        })
+      );
       setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== id));
+        dispatch(closeAlertAction({ id }));
       }, duration);
     });
-  }, [duration]);
+  }, []);
 
   return (
-    <Wrapper>
-      {toasts.map((t, i) => (
-        <li key={`${t.title}-${i}`}>
-          <Toast title={t.title} onClose={t.onClose}>
-            {t.text}
+    <ul
+      className={css({
+        position: "fixed",
+        bottom: "1rem",
+        right: "1rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+      })}
+    >
+      {alerts.map((a) => (
+        <li key={a.id}>
+          <Toast
+            title={a.title}
+            onClose={() => dispatch(closeAlertAction({ id: a.id }))}
+          >
+            {a.message}
           </Toast>
         </li>
       ))}
-    </Wrapper>
+    </ul>
   );
 }
