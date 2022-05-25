@@ -55,9 +55,11 @@ export default async function start() {
   }
   app.register(ApolloClientToken, ApolloClientPlugin);
   if (__NODE__) {
-    const mongoose = await import("mongoose");
-    const { auth } = await import("./library/plugins");
-    const { typeDefs, resolvers } = await import("./library/api");
+    const [mongoose, { auth }, { typeDefs, resolvers }] = await Promise.all([
+      import("mongoose"),
+      import("./library/plugins"),
+      import("./library/api"),
+    ]);
     await mongoose.connect(process.env.MONGO_URI);
     app.middleware(auth);
     app.register(

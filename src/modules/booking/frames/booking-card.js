@@ -1,4 +1,10 @@
-import { Card, ConfirmationModal } from "../../../library/common/components";
+import { Card, StyledBody, StyledAction } from "baseui/card";
+import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
+
+import {
+  ConfirmationModal,
+  InfoItem,
+} from "../../../library/common/components";
 import {
   formatDate,
   formatTime,
@@ -15,16 +21,42 @@ export function BookingCard({ booking }) {
   };
 
   return (
-    <Card>
-      <Card.Column $w="70%">
-        <h3>{booking.event.title}</h3>
-        <p>Date: {formatDate(booking.event.date)}</p>
-        <p>Time: {formatTime(booking.event.date)}</p>
-        <p>Price: {formatPrice(booking.event.price)}</p>
-      </Card.Column>
-      <Card.Column $w="30%" $align="end">
-        <p>Host: {formatUsername(booking.event.createdBy.email)}</p>
-        <p>Booked on: {formatDate(booking.createdAt)}</p>
+    <Card title={booking.event.title}>
+      <StyledBody>
+        <FlexGrid flexGridColumnCount={2} flexGridColumnGap="scale800">
+          <FlexGridItem
+            display="flex"
+            flexDirection="column"
+            gridGap="scale100"
+          >
+            <InfoItem title="Date" titleWidth="90px">
+              {formatDate(booking.event.date)}
+            </InfoItem>
+            <InfoItem title="Time" titleWidth="90px">
+              {formatTime(booking.event.date)}
+            </InfoItem>
+            <InfoItem title="Price" titleWidth="90px">
+              {formatPrice(booking.event.price)}
+            </InfoItem>
+          </FlexGridItem>
+          <FlexGridItem
+            display="flex"
+            flexDirection="column"
+            overrides={{
+              Block: { style: { width: "30%", flexGrow: 0 } },
+            }}
+            gridGap="scale100"
+          >
+            <InfoItem title="Host" titleWidth="90px">
+              {formatUsername(booking.event.createdBy.email)}
+            </InfoItem>
+            <InfoItem title="Booked on" titleWidth="90px">
+              {formatDate(booking.createdAt)}
+            </InfoItem>
+          </FlexGridItem>
+        </FlexGrid>
+      </StyledBody>
+      <StyledAction>
         <ConfirmationModal
           triggerText="Cancel booking"
           title="Cancel booking"
@@ -33,7 +65,7 @@ export function BookingCard({ booking }) {
           cancelText="Go back"
           confirmText="Yes, cancel"
         />
-      </Card.Column>
+      </StyledAction>
     </Card>
   );
 }

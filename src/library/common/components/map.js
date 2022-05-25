@@ -15,7 +15,7 @@ export const Map = ({ latitude, longitude, zoom = 14 }) => {
         longitude,
         zoom,
       }}
-      style={{ width: "100%", height: 300 }}
+      style={{ width: "100%", height: 300, flexShrink: 0 }}
       mapStyle="mapbox://styles/mapbox/streets-v9"
       mapboxAccessToken={token}
     >

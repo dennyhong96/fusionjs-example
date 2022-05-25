@@ -1,7 +1,19 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { styled } from "fusion-plugin-styletron-react";
+import { Button } from "baseui/button";
+import { FormControl } from "baseui/form-control";
+import { Input } from "baseui/input";
+import { Textarea } from "baseui/textarea";
+import { DatePicker } from "baseui/datepicker";
+import { StatefulMenu } from "baseui/menu";
+import { ListItemLabel, MenuAdapter } from "baseui/list";
+import { Spinner, SIZE } from "baseui/spinner";
+import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
+import { ParagraphMedium } from "baseui/typography";
+import { Heading, HeadingLevel } from "baseui/heading";
+import Delete from "baseui/icon/delete";
 
-import { Modal, Form, Loader, Map } from "../../../library/common/components";
+import { Modal, Form, Map } from "../../../library/common/components";
 import {
   useDebounceValue,
   useSafeDispatch,
@@ -23,56 +35,11 @@ const Actions = styled("div", {
   gap: "2rem",
 });
 
-const Row = styled("div", {
-  width: "100%",
-  display: "flex",
-  gap: "0.5rem",
-  alignItems: "center",
-});
-
-const Addy = styled("p", {
-  flex: 1,
-});
-
-const InputBox = styled("div", {
-  flex: 1,
-  position: "relative",
-});
-
-const Input = styled("input", {
-  width: "100%",
-  display: "block",
-  paddingRight: "2rem",
-});
-
-const LoaderWrapper = styled("div", {
-  position: "absolute",
-  right: "1rem",
-  top: "50%",
-  transform: "translateY(-50%)",
-});
-
-const ResultList = styled("ul", {
-  width: "100%",
-  display: "flex",
-  flexDirection: "column",
-  gap: "0.5rem",
-});
-
-const ResultButton = styled("button", {
-  display: "block",
-  width: "100%",
-  textAlign: "start",
-  background: "initial",
-});
-
-const Button = styled("button", {
-  height: "40px",
-});
-
-const SEARCH_DEBOUNCE_DELAY = 250;
+const SEARCH_DEBOUNCE_DELAY = 300;
 
 export function CreateEventModal() {
+  const [dateTime, setDateTime] = useState(new Date());
+
   const [locationQuery, unsafeSetLocationQuery] = useState("");
   const setLocationQuery = useSafeDispatch(unsafeSetLocationQuery);
   const debouncedLocationQuery = useDebounceValue(
@@ -97,7 +64,6 @@ export function CreateEventModal() {
   const titleRef = useRef(null);
   const descRef = useRef(null);
   const priceRef = useRef(null);
-  const dateRef = useRef(null);
   const createEventModal = useRef(null);
   const closeCreateEventModal = () => createEventModal.current?.handleClose?.();
 
@@ -106,21 +72,22 @@ export function CreateEventModal() {
     const title = titleRef.current?.value?.trim() ?? "";
     const description = descRef.current?.value;
     const price = Number(priceRef.current?.value?.trim());
-    const date = dateRef.current?.value?.trim() ?? "";
+    console.log({ title, description, price, dateTime, selectedLocation });
     if (
       !title ||
       !description ||
       !isFinite(price) ||
-      !date ||
+      !dateTime ||
       !selectedLocation
     ) {
       return;
     }
+
     await createEvent({
       title,
       description,
       price,
-      date,
+      date: new Date(dateTime).toISOString(),
       address: selectedLocation.address,
       coordinates: {
         latitude: selectedLocation.coordinates.latitude,
@@ -135,90 +102,148 @@ export function CreateEventModal() {
     <Modal
       $maxWidth="600px"
       ref={createEventModal}
-      trigger={<button>Create your event</button>}
+      trigger={<Button>Create an event</Button>}
     >
       <Warpper>
         <Form onSubmit={handleCreateEvent}>
-          <h4>Create your event</h4>
-          <Form.Field>
-            <span>Title:</span>
-            <input ref={titleRef} type="text" />
-          </Form.Field>
-          <Form.Field>
-            <span>Description:</span>
-            <textarea ref={descRef} rows={3} />
-          </Form.Field>
-          <Form.Field>
-            <span>Price:</span>
-            <input ref={priceRef} type="text" />
-          </Form.Field>
-          <Form.Field>
-            <span>Date:</span>
-            <input ref={dateRef} type="datetime-local" />
-          </Form.Field>
-          <Form.Field>
-            <span>Address:</span>
-            {selectedLocation ? (
-              <Fragment>
-                <Map
-                  longitude={selectedLocation.coordinates.longitude}
-                  latitude={selectedLocation.coordinates.latitude}
-                />
-                <Row>
-                  <Addy>{selectedLocation.address}</Addy>
-                  <Button
-                    type="button"
-                    onClick={setSelectedLocation.bind(null, null)}
-                  >
-                    Edit
-                  </Button>
-                </Row>
-              </Fragment>
-            ) : (
-              <Row>
-                <InputBox>
-                  <Input
-                    type="text"
-                    value={locationQuery}
-                    onChange={(e) => setLocationQuery(e.target.value)}
+          <HeadingLevel>
+            <Heading $as="h4">Create your event</Heading>
+          </HeadingLevel>
+          <FormControl label="Title" caption="Required">
+            <Input id="create-event-email" inputRef={titleRef} type="text" />
+          </FormControl>
+          <FormControl label="Description" caption="Required">
+            <Textarea id="create-event-description" inputRef={descRef} />
+          </FormControl>
+          <FormControl label="Price" caption="Required">
+            <Input id="create-event-price" inputRef={priceRef} type="text" />
+          </FormControl>
+          <FormControl label="Date" caption="Required">
+            <DatePicker
+              id="create-event-date"
+              timeSelectStart
+              value={dateTime}
+              onChange={({ date }) =>
+                setDateTime(Array.isArray(date) ? date : [date])
+              }
+            />
+          </FormControl>
+          <FormControl label="Address" caption="Required">
+            <Fragment>
+              {selectedLocation ? (
+                <Fragment>
+                  <Map
+                    longitude={selectedLocation.coordinates.longitude}
+                    latitude={selectedLocation.coordinates.latitude}
                   />
-                  {locationLoading && (
-                    <LoaderWrapper>
-                      <Loader size="sm" />
-                    </LoaderWrapper>
-                  )}
-                </InputBox>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    setLocationQuery("");
-                  }}
-                >
-                  x
-                </Button>
-              </Row>
-            )}
-          </Form.Field>
-          <ResultList>
-            {locations.map((location) => (
-              <li key={location._id}>
-                <ResultButton
-                  type="button"
-                  onClick={() => {
+                  <FlexGrid
+                    flexGridColumnCount={2}
+                    alignItems="center"
+                    paddingTop="1rem"
+                  >
+                    <FlexGridItem
+                      overrides={{
+                        Block: {
+                          style: {
+                            flex: "1",
+                          },
+                        },
+                      }}
+                    >
+                      <ParagraphMedium>
+                        {selectedLocation.address}
+                      </ParagraphMedium>
+                    </FlexGridItem>
+                    <FlexGridItem
+                      overrides={{
+                        Block: {
+                          style: {
+                            flex: "0",
+                            width: "max-content",
+                          },
+                        },
+                      }}
+                    >
+                      <Button
+                        type="button"
+                        onClick={setSelectedLocation.bind(null, null)}
+                      >
+                        Edit
+                      </Button>
+                    </FlexGridItem>
+                  </FlexGrid>
+                </Fragment>
+              ) : (
+                <Input
+                  id="create-event-address"
+                  type="text"
+                  value={locationQuery}
+                  onChange={(e) => setLocationQuery(e.target.value)}
+                  endEnhancer={
+                    <Fragment>
+                      {locationLoading ? (
+                        <Spinner $color="#000" $size={SIZE.small} />
+                      ) : (
+                        <Button
+                          size="compact"
+                          onClick={() => {
+                            setLocationQuery("");
+                          }}
+                          kind="secondary"
+                        >
+                          <Delete />
+                        </Button>
+                      )}
+                    </Fragment>
+                  }
+                />
+              )}
+              {locations.length > 0 && (
+                <StatefulMenu
+                  items={locations}
+                  onItemSelect={({ item: location }) => {
                     setSelectedLocation(location);
                     setLocationQuery("");
                   }}
-                >
-                  {location.address}
-                </ResultButton>
-              </li>
-            ))}
-          </ResultList>
+                  overrides={{
+                    List: {
+                      style: {
+                        height: "250px",
+                        width: "90%",
+                        margin: "auto",
+                      },
+                    },
+                    Option: {
+                      props: {
+                        overrides: {
+                          ListItem: {
+                            component: React.forwardRef((props, ref) => (
+                              <MenuAdapter {...props} ref={ref}>
+                                <ListItemLabel
+                                  description={`Lat: ${props.item.coordinates.latitude}, Lng: ${props.item.coordinates.longitude}`}
+                                >
+                                  {props.item.address}
+                                </ListItemLabel>
+                              </MenuAdapter>
+                            )),
+                          },
+                        },
+                      },
+                    },
+                  }}
+                />
+              )}
+            </Fragment>
+          </FormControl>
           <Actions>
-            <button onClick={closeCreateEventModal} type="button">
+            <Button
+              onClick={closeCreateEventModal}
+              type="button"
+              kind="secondary"
+            >
               Cancel
-            </button>
-            <button type="submit">Confirm</button>
+            </Button>
+            <Button type="submit">Confirm</Button>
           </Actions>
         </Form>
       </Warpper>

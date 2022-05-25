@@ -1,8 +1,10 @@
 import { Fragment, useRef, useState } from "react";
 import { styled } from "fusion-plugin-styletron-react";
+import { Button } from "baseui/button";
 
 import { Modal } from ".";
 import { useSafeDispatch } from "../hooks";
+import { LabelMedium, ParagraphMedium } from "baseui/typography";
 
 const ConfirmationDialog = styled("div", {
   width: "100%",
@@ -32,9 +34,19 @@ export function ConfirmationModal({
 
   return (
     <Fragment>
-      <button onClick={() => setOpen(true)} ref={triggerRef}>
+      <Button
+        overrides={{
+          Root: {
+            style: {
+              width: "100%",
+            },
+          },
+        }}
+        onClick={() => setOpen(true)}
+        ref={triggerRef}
+      >
         {triggerText}
-      </button>
+      </Button>
       <Modal
         $maxWidth="450px"
         open={open}
@@ -42,18 +54,20 @@ export function ConfirmationModal({
         returnFocusRef={triggerRef}
       >
         <ConfirmationDialog>
-          <h4>{title}</h4>
-          <p>{description}</p>
+          <LabelMedium>{title}</LabelMedium>
+          <ParagraphMedium>{description}</ParagraphMedium>
           <Actions>
-            <button onClick={() => setOpen(false)}>{cancelText}</button>
-            <button
+            <Button kind="secondary" onClick={() => setOpen(false)}>
+              {cancelText}
+            </Button>
+            <Button
               onClick={async () => {
                 await onConfirm();
                 setOpen(false);
               }}
             >
               {confirmText}
-            </button>
+            </Button>
           </Actions>
         </ConfirmationDialog>
       </Modal>

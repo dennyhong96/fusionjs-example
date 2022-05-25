@@ -2,6 +2,7 @@ export * from "./card";
 export * from "./confirmation-modal";
 export * from "./container";
 export * from "./form";
+export * from "./info-item";
 export * from "./layout";
 export * from "./loader";
 export * from "./map";

@@ -1,109 +1,113 @@
 import { Fragment } from "react";
-import { styled } from "fusion-plugin-styletron-react";
-import { NavLink } from "fusion-plugin-react-router";
+import { Link } from "fusion-plugin-react-router";
+import {
+  HeaderNavigation,
+  ALIGN,
+  StyledNavigationList,
+  StyledNavigationItem,
+} from "baseui/header-navigation";
+import { StyledLink } from "baseui/link";
+import { Heading, HeadingLevel } from "baseui/heading";
 
-import { Container } from ".";
 import { useAuth } from "../hooks";
-
-const Header = styled("header", {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  height: "5rem",
-  background: "#fff",
-  borderBottom: "1px solid #eee",
-});
-
-const Spacer = styled("div", {
-  height: "5rem",
-  width: "100%",
-});
-
-const Nav = styled("nav", {
-  width: "100%",
-  height: "100%",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  margin: "auto",
-});
-
-const NavItems = styled("ul", {
-  display: "flex",
-  listStyle: "none",
-  gap: "1rem",
-});
-
-const Link = styled(NavLink, {
-  textDecoration: "none",
-  color: "initial",
-  ":hover": {
-    textDecoration: "underline",
-  },
-});
-
-const Button = styled("button", {
-  background: "initial",
-  padding: "0",
-  ":hover": {
-    textDecoration: "underline",
-  },
-});
-
-const Main = styled("main", {
-  paddingTop: "3rem",
-  paddingBottom: "3rem",
-});
-
-const Footer = styled("footer", {
-  background: "#fff",
-  borderTop: "1px solid #eee",
-  paddingTop: "3rem",
-  paddingBottom: "3rem",
-});
+import { Container } from "./container";
+import { useStyletron } from "baseui";
 
 export function Layout({ children }) {
+  const [css] = useStyletron();
   const { isLoggedIn, logout } = useAuth();
 
   return (
     <Fragment>
-      <Header>
+      <header>
         <Container>
-          <Nav>
-            <Link to={"/"}>
-              <h4>EasyEvents</h4>
-            </Link>
-            <NavItems>
-              <li>
-                <Link to={"/"}>Events</Link>
-              </li>
-              {!isLoggedIn && (
-                <li>
-                  <Link to={"/auth"}>Login/Signup</Link>
-                </li>
-              )}
-              {isLoggedIn && (
+          <HeaderNavigation
+            overrides={{
+              Root: {
+                style: () => ({
+                  borderBottomColor: "initial",
+                  borderBottomWidth: "0",
+                }),
+              },
+            }}
+          >
+            <StyledNavigationList $align={ALIGN.left}>
+              <StyledNavigationItem style={{ paddingLeft: 0 }}>
+                <StyledLink
+                  $as={Link}
+                  to={"/"}
+                  style={{ textDecoration: "none" }}
+                >
+                  <HeadingLevel>
+                    <Heading $as="h4">EasyEvents</Heading>
+                  </HeadingLevel>
+                </StyledLink>
+              </StyledNavigationItem>
+            </StyledNavigationList>
+            <StyledNavigationList $align={ALIGN.center} />
+            <StyledNavigationList $align={ALIGN.right}>
+              <StyledNavigationItem>
+                <StyledLink $as={Link} to={"/"}>
+                  Events
+                </StyledLink>
+              </StyledNavigationItem>
+              {isLoggedIn ? (
                 <Fragment>
-                  <li>
-                    <Link to={"/bookings"}>My Bookings</Link>
-                  </li>
-                  <li>
-                    <Button onClick={logout}>Logout</Button>
-                  </li>
+                  <StyledNavigationItem>
+                    <StyledLink $as={Link} to={"/bookings"}>
+                      My Bookings
+                    </StyledLink>
+                  </StyledNavigationItem>
+                  <StyledNavigationItem>
+                    <StyledLink
+                      as="button"
+                      onClick={logout}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Logout
+                    </StyledLink>
+                  </StyledNavigationItem>
                 </Fragment>
+              ) : (
+                <StyledNavigationItem>
+                  <StyledLink $as={Link} to={"/auth"}>
+                    Login/Signup
+                  </StyledLink>
+                </StyledNavigationItem>
               )}
-            </NavItems>
-          </Nav>
+            </StyledNavigationList>
+          </HeaderNavigation>
         </Container>
-      </Header>
-      <Spacer />
-      <Main>
+      </header>
+
+      <main
+        className={css({
+          paddingTop: "3rem",
+          paddingBottom: "3rem",
+        })}
+      >
         <Container>{children}</Container>
-      </Main>
-      <Footer>
-        <Container>EasyEvents | {new Date().getFullYear()}</Container>
-      </Footer>
+      </main>
+
+      <footer
+        className={css({
+          background: "#000",
+          color: "#fff",
+          paddingTop: "3rem",
+          paddingBottom: "3rem",
+        })}
+      >
+        <Container>
+          <div
+            className={css({
+              display: "flex",
+              justifyContent: "center",
+            })}
+          >
+            EasyEvents | {new Date().getFullYear()}
+          </div>
+        </Container>
+      </footer>
     </Fragment>
   );
 }
